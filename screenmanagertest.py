@@ -1,29 +1,20 @@
 from kivy import app
 from kivy.config import Config
-from kivy.uix.button import Button
-from kivy.uix.gridlayout import GridLayout
-from kivy.uix.scrollview import ScrollView
 
 Config.set('graphics', 'width', '500')
 Config.set('graphics', 'height', '800')
 Config.set('graphics', 'resizable', False)
+
+import uiFileIOLibrary as io
 
 from random import random
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
 from kivy.graphics import Color, Line
-
-hiraLessonTitles = ["Vowels + K Lines", "S + T Lines", "N + H Lines", "M + Y Lines", "R + W + n Lines",
-                    "V + K + K + T Lines", "N + H + M Lines", "Y + R + W + n Lines", "V, K, S, T, N, H Lines",
-                    "M, Y, R, W, n Lines", "All Standard Hiragana", "Voiced Hiragana", "All Hiragana"]
-
-kataLessonTitles = ["Vowels + K Lines", "S + T Lines", "N + H Lines", "M + Y Lines", "R + W + n Lines",
-                    "V + K + K + T Lines", "N + H + M Lines", "Y + R + W + n Lines", "V, K, S, T, N, H Lines",
-                    "M, Y, R, W, n Lines", "All Katakana"]
-
-kanjiLessonTitles = ["Words 1", "Words 2", "Words 3"]
-
+from kivy.uix.button import Button
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.scrollview import ScrollView
 
 class StartScreen(Screen):
     pass
@@ -47,22 +38,10 @@ class HiraganaLessonScreen(Screen):
         self.add_buttons()
 
     def add_buttons(self):
-        layout = GridLayout(cols=1, spacing=15, size_hint_y=None, padding=[100, 0, 0, 0])
-        layout.bind(minimum_height=layout.setter('height'))
-        for i in range(len(hiraLessonTitles)):
-            button = Button(text='Lesson ' + str(i+1) + ": " + hiraLessonTitles[i],
-                            id=str(i+1),
-                            size_hint=(None, None),
-                            size=(300, 60))
-            button.bind(on_press=self.testFunction)
-            layout.add_widget(button)
-        svLayout = ScrollView(size_hint=(1, None), size=(500, 550), do_scroll_x=False, do_scroll_y=True,
-                              pos_hint={'center_x': .5, 'center_y': .5})
-        svLayout.add_widget(layout)
-        self.add_widget(svLayout)
+        io.generateLessons(self, 0)
 
     def testFunction(self, args):
-        print(args.id)
+        print("Hello from Hiragana")
         self.manager.current = "results"
 
     pass
@@ -74,22 +53,10 @@ class KatakanaLessonScreen(Screen):
         self.add_buttons()
 
     def add_buttons(self):
-        layout = GridLayout(cols=1, spacing=15, size_hint_y=None, padding=[100, 0, 0, 0])
-        layout.bind(minimum_height=layout.setter('height'))
-        for i in range(len(kataLessonTitles)):
-            button = Button(text='Lesson ' + str(i+1) + ": " + kataLessonTitles[i],
-                            id=str(i+1),
-                            size_hint=(None, None),
-                            size=(300, 60))
-            button.bind(on_press=self.testFunction)
-            layout.add_widget(button)
-        svLayout = ScrollView(size_hint=(1, None), size=(500, 550), do_scroll_x=False, do_scroll_y=True,
-                              pos_hint={'center_x': .5, 'center_y': .5})
-        svLayout.add_widget(layout)
-        self.add_widget(svLayout)
+        io.generateLessons(self, 1)
 
     def testFunction(self, args):
-        print(args.id)
+        print("Hello from Katakana")
         self.manager.current = "results"
 
     pass
@@ -102,22 +69,10 @@ class KanjiLessonScreen(Screen):
         self.add_buttons()
 
     def add_buttons(self):
-        layout = GridLayout(cols=1, spacing=15, size_hint_y=None, padding=[100, 0, 0, 0])
-        layout.bind(minimum_height=layout.setter('height'))
-        for i in range(len(kanjiLessonTitles)):
-            button = Button(text='Lesson ' + str(i+1) + ": " + kanjiLessonTitles[i],
-                            id=str(i+1),
-                            size_hint=(None, None),
-                            size=(300, 60))
-            button.bind(on_press=self.testFunction)
-            layout.add_widget(button)
-        svLayout = ScrollView(size_hint=(1, None), size=(500, 550), do_scroll_x=False, do_scroll_y=True,
-                              pos_hint={'center_x': .5, 'center_y': .5})
-        svLayout.add_widget(layout)
-        self.add_widget(svLayout)
+        io.generateLessons(self, 2)
 
     def testFunction(self, args):
-        print(args.id)
+        print("Hello from Kanji")
         self.manager.current = "results"
     pass
 
@@ -150,7 +105,6 @@ class MyPaintWidget(Widget):
 class ScreenManagerTestApp(App):
     def build(self):
         return MyScreenManager()
-
 
 if __name__ == "__main__":
     ScreenManagerTestApp().run()
