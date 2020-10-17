@@ -209,22 +209,79 @@
 
 <QuestionScreen>
     name: 'question'
-    BoxLayout:
-        orientation: 'vertical'
-        Label:
-            text: 'Q 1/20'
-            font_size: 8
-        Label:
-            text: 'Example question 1'
-            font_size: 16
+    id: questionScrn
+    RelativeLayout:
         MyPaintWidget:
             id: drawingCanvas
+        Label:
+            id: questionNum
+            text: 'Q: 1/20'
+            font_size: 20
+            pos_hint: {'center_x': .9, 'center_y': .95}
+        Label:
+            id: questionLabel
+            text: 'Example question 1'
+            font_size: 28
+            pos_hint: {'center_x': .5, 'center_y': .8}
+        Label:
+            id: correctAns
+            text: 'Correct/Incorrect'
+            font_size: 22
+            pos_hint: {'center_x': .5, 'center_y': .23}
+        Label:
+            id: userAns
+            font_name: 'fonts/meiryo.ttf'
+            text: ''
+            font_size: 18
+            pos_hint: {'center_x': .5, 'center_y': .20}
+        Label:
+            id: trueAns
+            font_name: 'fonts/meiryo.ttf'
+            text: ''
+            font_size: 18
+            pos_hint: {'center_x': .5, 'center_y': .17}
+        Button:
+            text: 'Clear'
+            font_size: 18
+            on_release: drawingCanvas.canvas.clear()
+            size_hint: None, None
+            size: 80, 40
+            pos_hint: {'center_x': .12, 'center_y': .23}
         Button:
             text: 'Submit Answer'
             font_size: 10
             on_release:
+                drawingCanvas.submitAnswer()
+                correctAns.text = root.getAnswerResult()
+                userAns.text = "You wrote: " + root.getUserAnswer()
+                trueAns.text = "Correct Answer: " + root.getCorrectAnswer()
+                nextQBtn.disabled = False
+            size_hint: None, None
+            size: 80, 40
+            pos_hint: {'center_x': .88, 'center_y': .23}
+        Button:
+            id: nextQBtn
+            text: 'Next Question'
+            font_size: 20
+            on_release:
                 drawingCanvas.canvas.clear()
-                app.root.current = 'results'
+                root.getNextQuestion()
+                correctAns.text = ""
+                userAns.text = ""
+                trueAns.text = ""
+            size_hint: None, None
+            size: 150, 40
+            pos_hint: {'center_x': .81, 'center_y': .07}
+            disabled: True
+        Button:
+            text: 'Back to \nCourses'
+            font_size: 15
+            on_release:
+                drawingCanvas.canvas.clear()
+                app.root.current = 'course'
+            size_hint: None, None
+            size: 80, 40
+            pos_hint: {'center_x': .1, 'center_y': .95}
 
 <ResultsScreen>
     name: 'results'

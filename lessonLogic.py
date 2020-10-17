@@ -8,6 +8,12 @@ lessonArr = []
 arrLang = -1
 currLesson = -1
 currLang = -1
+currQuestionNum = 1
+totalQuestionNum = 10
+questionArray = ["Write down the character for: 'a'", "Write down the character for: 'i'", "Write down the character for: 'u'",
+                 "Write down the character for: 'e'", "Write down the character for: 'o'", "Write down the character for: 'ka'",
+                 "Write down the character for: 'ki'", "Write down the character for: 'ku'", "Write down the character for: 'ke'",
+                 "Write down the character for: 'ko'"]
 
 def generateLessons(screen, lang):
     global lessonArr
@@ -47,3 +53,13 @@ def getCurrLessonScreen():
     else:
         retStr = "kanjiLessons"
     return retStr
+
+def getNextQuestion(screen):
+    global currQuestionNum
+    if currQuestionNum == totalQuestionNum + 1:
+        return False
+    else:
+        screen.ids.questionLabel.text = questionArray[currQuestionNum - 1]
+        screen.ids.questionNum.text = "Q: " + str(currQuestionNum) + "/" + str(totalQuestionNum)
+        currQuestionNum += 1
+        return True
