@@ -3,6 +3,8 @@ from kivy.config import Config
 from kivy.lang import Builder
 
 # Sets the config first
+from kivy.properties import ListProperty
+
 Config.set('graphics', 'width', '500')
 Config.set('graphics', 'height', '800')
 Config.set('graphics', 'resizable', False)
@@ -10,7 +12,6 @@ Config.set('graphics', 'resizable', False)
 # helper files to modularize the code
 import lessonLogic as lLogic
 
-from random import random
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
@@ -18,10 +19,10 @@ from kivy.graphics import Color, Line
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 
+
 # loads kv file to control the design of the us
 with open("uiDesignMain.kv", encoding='utf-8') as f:
     Builder.load_string(f.read())
-
 
 # Main menu screen
 class StartScreen(Screen):
@@ -146,6 +147,10 @@ class PriorToQuestionsScreen(Screen):
 
 # Main question screen and drawing ui
 class QuestionScreen(Screen):
+    def __init__(self, **kwargs):
+        super(QuestionScreen, self).__init__(**kwargs)
+        self.flag = 0
+        default(self)
     pass
 
 
@@ -154,22 +159,59 @@ class ResultsScreen(Screen):
     pass
 
 
+clr=[1,1,1,1]
+pre_clr=clr
+xs=0
+ys=0
+wide=2
 '''
     This widget is the drawing UI found on the question screen. It handles touch input and can clear the screen after
     submission and when a button is pressed.
 '''
 class MyPaintWidget(Widget):
+    col = ListProperty(clr)
+    def save(self):
+        self.export_to_png("image.jpg")
 
     def on_touch_down(self, touch):
-        color = (random(), 1, 1)
-        with self.canvas:
-            Color(*color, mode='hsv')
-            d = 30.
-            touch.ud['line'] = Line(points=(touch.x, touch.y))
+        # print "down"
+        global xs, ys, wide
+        press = 1
+        if incanvasxy(touch.x, touch.y):
+            self.col = retclr()
+            if Widget.on_touch_down(self, touch):
+                xs = touch.x
+                ys = touch.y
+                return True
+
+            with self.canvas:
+                Color(*self.col)
+                # d = 30
+                # Ellipse(pos=(touch.x - d / 2,touch.y - d / 2), size=(d,d))
+                touch.ud['line'] = Line(points=(touch.x, touch.y), width=wide)
+                # if sline:
+                xs = touch.x
+                ys = touch.y
 
     def on_touch_move(self, touch):
-        touch.ud['line'].points += [touch.x, touch.y]
+        global xs, ys, wide
+        if incanvasxy(touch.x, touch.y) and incanvasxy(xs, ys):
+            self.col = retclr()
+            if incanvasxy(xs, ys):
+                touch.ud["line"].points += [touch.x, touch.y]
 
+def retclr():
+    return clr
+
+def default (self):
+    with self.canvas.after:
+        col =[1,1,1,1]
+        Color(*col)
+        Line(rectangle=(25, 225, 450, 375),width=5)
+
+def incanvasxy(x,y):
+    if x > 25 and y > 225 and x < 475 and y < 600:
+        return True
 
 class ScreenManagerTestApp(App):
     def build(self):

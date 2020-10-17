@@ -209,22 +209,49 @@
 
 <QuestionScreen>
     name: 'question'
-    BoxLayout:
-        orientation: 'vertical'
-        Label:
-            text: 'Q 1/20'
-            font_size: 8
-        Label:
-            text: 'Example question 1'
-            font_size: 16
+    RelativeLayout:
         MyPaintWidget:
             id: drawingCanvas
+        Label:
+            text: 'Q 1/20'
+            font_size: 20
+            pos_hint: {'center_x': .9, 'center_y': .95}
+        Label:
+            text: 'Example question 1'
+            font_size: 32
+            pos_hint: {'center_x': .5, 'center_y': .8}
+        Button:
+            text: 'Clear'
+            font_size: 10
+            on_release: drawingCanvas.canvas.clear()
+            size_hint: None, None
+            size: 80, 40
+            pos_hint: {'center_x': .12, 'center_y': .23}
+        Button:
+            text: 'Save Picture'
+            font_size: 10
+            on_release: drawingCanvas.save()
+            size_hint: None, None
+            size: 80, 40
+            pos_hint: {'center_x': .5, 'center_y': .1}
         Button:
             text: 'Submit Answer'
-            font_size: 10
+            font_size: 20
             on_release:
                 drawingCanvas.canvas.clear()
                 app.root.current = 'results'
+            size_hint: None, None
+            size: 150, 40
+            pos_hint: {'center_x': .83, 'center_y': .07}
+        Button:
+            text: 'Leave'
+            font_size: 10
+            on_release:
+                drawingCanvas.canvas.clear()
+                app.root.current = 'course'
+            size_hint: None, None
+            size: 80, 40
+            pos_hint: {'center_x': .1, 'center_y': .95}
 
 <ResultsScreen>
     name: 'results'
