@@ -248,9 +248,11 @@
             size: 80, 40
             pos_hint: {'center_x': .12, 'center_y': .23}
         Button:
-            text: 'Submit Answer'
-            font_size: 10
+            id: submitBtn
+            text: 'Submit'
+            font_size: 18
             on_release:
+                submitBtn.disabled = True
                 drawingCanvas.submitAnswer()
                 correctAns.text = root.getAnswerResult()
                 userAns.text = "You wrote: " + root.getUserAnswer()
@@ -269,6 +271,8 @@
                 correctAns.text = ""
                 userAns.text = ""
                 trueAns.text = ""
+                submitBtn.disabled = False
+                nextQBtn.disabled = True
             size_hint: None, None
             size: 150, 40
             pos_hint: {'center_x': .81, 'center_y': .07}
@@ -288,56 +292,57 @@
     RelativeLayout:
         Label:
             text: 'Results'
-            font_size: 44
-            pos_hint: {'center_x': .5, 'center_y': .90}
+            font_size: 64
+            pos_hint: {'center_x': .5, 'center_y': .95}
         Label:
             id: resCurrLessonLang
             text: 'Hiragana'
-            font_size: 32
-            pos_hint: {'center_x': .5, 'center_y': .85}
+            underline: True
+            font_size: 46
+            pos_hint: {'center_x': .5, 'center_y': .8}
         Label:
             id: resCurrLessonNum
             text: 'Lesson 1'
-            font_size: 26
-            pos_hint: {'center_x': .5, 'center_y': .8}
+            font_size: 36
+            pos_hint: {'center_x': .5, 'center_y': .7}
         Label:
             id: resCurrLessonTitle
             text: 'Word List 1'
-            font_size: 20
-            pos_hint: {'center_x': .5, 'center_y': .75}
+            font_size: 26
+            pos_hint: {'center_x': .5, 'center_y': .6}
         Label:
             id: resTotalCorrect
             text: 'You got 11/20 questions correct'
-            font_size: 17
-            pos_hint: {'center_x': .5, 'center_y': .65}
+            font_size: 22
+            pos_hint: {'center_x': .5, 'center_y': .5}
         Label:
             id: resAccuracy
             text: 'Accuracy: 55%'
-            font_size: 14
-            pos_hint: {'center_x': .5, 'center_y': .55}
+            font_size: 22
+            pos_hint: {'center_x': .5, 'center_y': .4}
         Label:
             id: resLessonUnlockLbl
             text: 'Try again to unlock the next lesson!'
             font_size: 18
-            pos_hint: {'center_x': .5, 'center_y': .45}
+            pos_hint: {'center_x': .5, 'center_y': .3}
         Button:
             text: 'Back to Lesson List'
-            font_size: 12
+            font_size: 16
             on_release: root.loadLessonList()
             size_hint: None, None
-            size: 120, 40
-            pos_hint: {'center_x': .1, 'center_y': .2}
+            size: 150, 80
+            pos_hint: {'center_x': .19, 'center_y': .1}
         Button:
             text: 'Next Lesson'
-            font_size: 12
+            font_size: 16
             on_release: root.loadNextLesson()
             size_hint: None, None
-            size: 120, 40
-            pos_hint: {'center_x': .8, 'center_y': .2}
+            size: 150, 80
+            pos_hint: {'center_x': .81, 'center_y': .1}
         Button:
             text: 'Main Menu'
             font_size: 12
             on_release: app.root.current = 'start'
             size_hint: None, None
             size: 80, 40
-            pos_hint: {'center_x': .1, 'center_y': .9}
+            pos_hint: {'center_x': .12, 'center_y': .95}

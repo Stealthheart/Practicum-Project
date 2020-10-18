@@ -2,6 +2,7 @@ from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.scrollview import ScrollView
 import uiFileIOLibrary as io
+from random import randrange
 
 langTypes = ["Hiragana", "Katakana", "Kanji"]
 lessonArr = []
@@ -15,6 +16,7 @@ questionArray = ["Write down the character for: 'a'", "Write down the character 
                  "Write down the character for: 'e'", "Write down the character for: 'o'", "Write down the character for: 'ka'",
                  "Write down the character for: 'ki'", "Write down the character for: 'ku'", "Write down the character for: 'ke'",
                  "Write down the character for: 'ko'"]
+correctAnswer = 0
 
 def generateLessons(screen, lang):
     global lessonArr
@@ -95,3 +97,19 @@ def getCorrectQuestionCount():
 
 def getTotalQuestionCount():
     return totalQuestionNum
+
+def determineCorrectness():
+    global correctAnswer
+    if correctAnswer == 0:
+        return "Correct"
+    else:
+        return "Incorrect"
+
+def checkAnswer(img):
+    global correctQuestions, correctAnswer
+    num = randrange(2)
+    if num == 0:
+        correctAnswer = 0
+        correctQuestions += 1
+    else:
+        correctAnswer = 1
