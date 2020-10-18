@@ -9,6 +9,7 @@ arrLang = -1
 currLesson = -1
 currLang = -1
 currQuestionNum = 1
+correctQuestions = 0
 totalQuestionNum = 10
 questionArray = ["Write down the character for: 'a'", "Write down the character for: 'i'", "Write down the character for: 'u'",
                  "Write down the character for: 'e'", "Write down the character for: 'o'", "Write down the character for: 'ka'",
@@ -35,12 +36,20 @@ def generateLessons(screen, lang):
     screen.add_widget(svLayout)
 
 def setLesson(lessonNum, lang):
-    global currLesson, currLang, arrLang
+    global currLesson, currLang, arrLang, lessonArr
+    if lang != currLang:
+        repopulateLessonArray(lang)
     currLesson = int(lessonNum) - 1
     currLang = int(lang)
     arrLang = currLang
 
+def repopulateLessonArray(lang):
+    global lessonArr
+    lessonArr = io.readJsonLessons(lang)
+
 def setAttr(screen):
+    global currQuestionNum
+    currQuestionNum = 1
     screen.ids.lessonText.text = langTypes[currLang]
     screen.ids.lessonNum.text = "Lesson " + str(currLesson + 1)
     screen.ids.lessonTitle.text = lessonArr[currLesson]
@@ -63,3 +72,26 @@ def getNextQuestion(screen):
         screen.ids.questionNum.text = "Q: " + str(currQuestionNum) + "/" + str(totalQuestionNum)
         currQuestionNum += 1
         return True
+
+def getSelectedLanguage():
+    return langTypes[currLang]
+
+def getCurrentLessonNum():
+    return currLesson
+
+def loadNextLessonInfo():
+    global currLesson, currQuestionNum
+    currLesson += 1
+
+def resetCurrLessonProg():
+    global currQuestionNum
+    currQuestionNum = 1
+
+def getCurrLessonTitle():
+    return lessonArr[currLesson]
+
+def getCorrectQuestionCount():
+    return correctQuestions
+
+def getTotalQuestionCount():
+    return totalQuestionNum

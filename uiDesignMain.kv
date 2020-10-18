@@ -225,7 +225,7 @@
             pos_hint: {'center_x': .5, 'center_y': .8}
         Label:
             id: correctAns
-            text: 'Correct/Incorrect'
+            text: ''
             font_size: 22
             pos_hint: {'center_x': .5, 'center_y': .23}
         Label:
@@ -285,21 +285,59 @@
 
 <ResultsScreen>
     name: 'results'
-    BoxLayout:
-        orientation: 'vertical'
+    RelativeLayout:
         Label:
             text: 'Results'
-            font_size: 22
+            font_size: 44
+            pos_hint: {'center_x': .5, 'center_y': .90}
         Label:
+            id: resCurrLessonLang
+            text: 'Hiragana'
+            font_size: 32
+            pos_hint: {'center_x': .5, 'center_y': .85}
+        Label:
+            id: resCurrLessonNum
+            text: 'Lesson 1'
+            font_size: 26
+            pos_hint: {'center_x': .5, 'center_y': .8}
+        Label:
+            id: resCurrLessonTitle
+            text: 'Word List 1'
+            font_size: 20
+            pos_hint: {'center_x': .5, 'center_y': .75}
+        Label:
+            id: resTotalCorrect
             text: 'You got 11/20 questions correct'
-            font_size: 18
+            font_size: 17
+            pos_hint: {'center_x': .5, 'center_y': .65}
         Label:
+            id: resAccuracy
             text: 'Accuracy: 55%'
-            font_size: 15
+            font_size: 14
+            pos_hint: {'center_x': .5, 'center_y': .55}
         Label:
+            id: resLessonUnlockLbl
             text: 'Try again to unlock the next lesson!'
             font_size: 18
+            pos_hint: {'center_x': .5, 'center_y': .45}
         Button:
             text: 'Back to Lesson List'
             font_size: 12
-            on_release: app.root.current = 'course'
+            on_release: root.loadLessonList()
+            size_hint: None, None
+            size: 120, 40
+            pos_hint: {'center_x': .1, 'center_y': .2}
+        Button:
+            text: 'Next Lesson'
+            font_size: 12
+            on_release: root.loadNextLesson()
+            size_hint: None, None
+            size: 120, 40
+            pos_hint: {'center_x': .8, 'center_y': .2}
+        Button:
+            text: 'Main Menu'
+            font_size: 12
+            on_release: app.root.current = 'start'
+            size_hint: None, None
+            size: 80, 40
+            pos_hint: {'center_x': .1, 'center_y': .9}

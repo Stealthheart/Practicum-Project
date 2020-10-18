@@ -149,6 +149,7 @@ class QuestionScreen(Screen):
 
     def on_pre_enter(self):
         lLogic.getNextQuestion(self)
+        self.ids.nextQBtn.disabled = True
 
     def getAnswerResult(self):
         return "Correct"
@@ -171,6 +172,30 @@ class QuestionScreen(Screen):
 
 # shows overall results after a completed lesson
 class ResultsScreen(Screen):
+
+    def __init__(self, **kwargs):
+        super(ResultsScreen, self).__init__(**kwargs)
+
+    def on_pre_enter(self, *args):
+        percentage = 100 * (float(lLogic.getCorrectQuestionCount()) / float(lLogic.getTotalQuestionCount()))
+
+        self.ids.resCurrLessonLang.text = lLogic.getSelectedLanguage()
+        self.ids.resCurrLessonNum.text = "Lesson " + str(lLogic.getCurrentLessonNum() + 1)
+        self.ids.resCurrLessonTitle.text = lLogic.getCurrLessonTitle()
+        self.ids.resTotalCorrect.text = str(lLogic.getCorrectQuestionCount()) + "/" + str(lLogic.getTotalQuestionCount()) + " correct"
+        self.ids.resAccuracy.text = str(percentage)
+        if percentage >= 80:
+            self.ids.resLessonUnlockLbl.text = "You have unlocked the next lesson!"
+        else:
+            self.ids.resLessonUnlockLbl.text = "Try again for 80% to unlock the next lesson."
+
+    def loadNextLesson(self):
+        lLogic.loadNextLessonInfo()
+        self.manager.current = 'priorToQuestions'
+
+    def loadLessonList(self):
+        self.manager.current = lLogic.getCurrLessonScreen()
+
     pass
 
 
