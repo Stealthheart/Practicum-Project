@@ -1,6 +1,7 @@
 from kivy.config import Config
 from kivy.lang import Builder
 from kivy.app import App
+from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
 from kivy.graphics import Color, Line
@@ -30,6 +31,21 @@ class CourseScreen(Screen):
 
 # View and select profiles for the different users
 class ProfileScreen(Screen):
+    def __init__(self, **kwargs):
+        super(ProfileScreen, self).__init__(**kwargs)
+        self.flag = 0
+
+    def on_pre_enter(self, *args):
+        if self.flag == 0:
+            print("hello")
+            lLogic.generateProfileList(self)
+            self.flag = 1
+
+    def testFunction(self, args):
+        print(args.id)
+    pass
+
+class ProfilePopup(RelativeLayout):
     pass
 
 # Main screen manager to handle control of the different screens
@@ -149,9 +165,10 @@ class QuestionScreen(Screen):
 
     def on_pre_enter(self):
         lLogic.getNextQuestion(self)
+        self.ids.nextQBtn.disabled = True
 
     def getAnswerResult(self):
-        return "Correct"
+        return lLogic.determineCorrectness()
 
     def getUserAnswer(self):
         return "あ"
@@ -163,14 +180,40 @@ class QuestionScreen(Screen):
         lessContinues = lLogic.getNextQuestion(self)
         if not lessContinues:
             self.manager.current = 'results'
-        else:
-            self.ids.nextQBtn.disabled = True
 
     pass
 
 
 # shows overall results after a completed lesson
 class ResultsScreen(Screen):
+
+    def __init__(self, **kwargs):
+        super(ResultsScreen, self).__init__(**kwargs)
+        with self.canvas.after:
+            col = [1, 1, 1, 1]
+            Color(*col)
+            Line(rectangle=(25, 175, 450, 525), width=5)
+
+    def on_pre_enter(self, *args):
+        percentage = 100 * (float(lLogic.getCorrectQuestionCount()) / float(lLogic.getTotalQuestionCount()))
+
+        self.ids.resCurrLessonLang.text = lLogic.getSelectedLanguage()
+        self.ids.resCurrLessonNum.text = "Lesson " + str(lLogic.getCurrentLessonNum() + 1)
+        self.ids.resCurrLessonTitle.text = lLogic.getCurrLessonTitle()
+        self.ids.resTotalCorrect.text = str(lLogic.getCorrectQuestionCount()) + "/" + str(lLogic.getTotalQuestionCount()) + " correct"
+        self.ids.resAccuracy.text = "Accuracy: " + str(percentage) + "%"
+        if percentage >= 80:
+            self.ids.resLessonUnlockLbl.text = "You have unlocked the next lesson!"
+        else:
+            self.ids.resLessonUnlockLbl.text = "Try again for 80% to unlock the next lesson."
+
+    def loadNextLesson(self):
+        lLogic.loadNextLessonInfo()
+        self.manager.current = 'priorToQuestions'
+
+    def loadLessonList(self):
+        self.manager.current = lLogic.getCurrLessonScreen()
+
     pass
 
 
@@ -187,6 +230,8 @@ class MyPaintWidget(Widget):
 
     def submitAnswer(self):
         self.export_to_png("image.jpg")
+        image = open('image.jpg')
+        lLogic.checkAnswer(image)
 
     def on_touch_down(self, touch):
         global xs, ys, wide

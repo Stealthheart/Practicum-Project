@@ -87,23 +87,55 @@
 
 <ProfileScreen>:
     name: 'profiles'
-    BoxLayout:
-        orientation: 'vertical'
-        BoxLayout:
-            orientation: 'horizontal'
-            Label:
-                text: 'Name: '
-                size_hint_y: None
-            TextInput:
-                id: myTextInput
-                font_size: 20
-                size_hint_y: None
-                height: 50
-                text: 'default'
+    RelativeLayout:
+        size: 500, 800
+        Label:
+            text: 'Profiles'
+            font_size: 36
+            pos_hint: {'center_x': .5, 'center_y': .95}
+        Label:
+            text: 'Created Profiles'
+            font_size: 24
+            pos_hint: {'center_x': .25, 'center_y': .74}
+        Label:
+            text: 'Profile created successfully!'
+            font_size: 18
+            pos_hint: {'center_x': .7, 'center_y': .65}
+        Label:
+            text: 'Profile deleted successfully!'
+            font_size: 18
+            pos_hint: {'center_x': .7, 'center_y': .5}
+        Label:
+            text: 'Highest Hiragana Lesson Completed: 1'
+            font_size: 18
+            pos_hint: {'center_x': .38, 'center_y': .3}
+        Label:
+            text: 'Highest Katakana Lesson Completed: 1'
+            font_size: 18
+            pos_hint: {'center_x': .38, 'center_y': .2}
+        Label:
+            text: 'Highest Kanji Lesson Completed: 1'
+            font_size: 18
+            pos_hint: {'center_x': .35, 'center_y': .1}
         Button:
-            text: 'back to start screen'
+            text: 'New'
+            font_size: 20
+            size_hint: None, None
+            size: 80, 40
+            pos_hint: {'center_x': .7, 'center_y': .7}
+        Button:
+            text: 'Delete'
+            font_size: 20
+            size_hint: None, None
+            size: 80, 40
+            pos_hint: {'center_x': .7, 'center_y': .55}
+        Button:
+            text: 'Main Menu'
             font_size: 15
             on_release: app.root.current = 'start'
+            size_hint: None, None
+            size: 80, 40
+            pos_hint: {'center_x': .1, 'center_y': .95}
 
 <HiraganaLessonScreen>
     name: 'hLessons'
@@ -225,7 +257,7 @@
             pos_hint: {'center_x': .5, 'center_y': .8}
         Label:
             id: correctAns
-            text: 'Correct/Incorrect'
+            text: ''
             font_size: 22
             pos_hint: {'center_x': .5, 'center_y': .23}
         Label:
@@ -248,9 +280,11 @@
             size: 80, 40
             pos_hint: {'center_x': .12, 'center_y': .23}
         Button:
-            text: 'Submit Answer'
-            font_size: 10
+            id: submitBtn
+            text: 'Submit'
+            font_size: 18
             on_release:
+                submitBtn.disabled = True
                 drawingCanvas.submitAnswer()
                 correctAns.text = root.getAnswerResult()
                 userAns.text = "You wrote: " + root.getUserAnswer()
@@ -269,6 +303,8 @@
                 correctAns.text = ""
                 userAns.text = ""
                 trueAns.text = ""
+                submitBtn.disabled = False
+                nextQBtn.disabled = True
             size_hint: None, None
             size: 150, 40
             pos_hint: {'center_x': .81, 'center_y': .07}
@@ -285,21 +321,60 @@
 
 <ResultsScreen>
     name: 'results'
-    BoxLayout:
-        orientation: 'vertical'
+    RelativeLayout:
         Label:
             text: 'Results'
-            font_size: 22
+            font_size: 64
+            pos_hint: {'center_x': .5, 'center_y': .95}
         Label:
+            id: resCurrLessonLang
+            text: 'Hiragana'
+            underline: True
+            font_size: 46
+            pos_hint: {'center_x': .5, 'center_y': .8}
+        Label:
+            id: resCurrLessonNum
+            text: 'Lesson 1'
+            font_size: 36
+            pos_hint: {'center_x': .5, 'center_y': .7}
+        Label:
+            id: resCurrLessonTitle
+            text: 'Word List 1'
+            font_size: 26
+            pos_hint: {'center_x': .5, 'center_y': .6}
+        Label:
+            id: resTotalCorrect
             text: 'You got 11/20 questions correct'
-            font_size: 18
+            font_size: 22
+            pos_hint: {'center_x': .5, 'center_y': .5}
         Label:
+            id: resAccuracy
             text: 'Accuracy: 55%'
-            font_size: 15
+            font_size: 22
+            pos_hint: {'center_x': .5, 'center_y': .4}
         Label:
+            id: resLessonUnlockLbl
             text: 'Try again to unlock the next lesson!'
             font_size: 18
+            pos_hint: {'center_x': .5, 'center_y': .3}
         Button:
             text: 'Back to Lesson List'
+            font_size: 16
+            on_release: root.loadLessonList()
+            size_hint: None, None
+            size: 150, 80
+            pos_hint: {'center_x': .19, 'center_y': .1}
+        Button:
+            text: 'Next Lesson'
+            font_size: 16
+            on_release: root.loadNextLesson()
+            size_hint: None, None
+            size: 150, 80
+            pos_hint: {'center_x': .81, 'center_y': .1}
+        Button:
+            text: 'Main Menu'
             font_size: 12
-            on_release: app.root.current = 'course'
+            on_release: app.root.current = 'start'
+            size_hint: None, None
+            size: 80, 40
+            pos_hint: {'center_x': .12, 'center_y': .95}

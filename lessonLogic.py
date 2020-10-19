@@ -2,6 +2,7 @@ from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.scrollview import ScrollView
 import uiFileIOLibrary as io
+from random import randrange
 
 langTypes = ["Hiragana", "Katakana", "Kanji"]
 lessonArr = []
@@ -9,11 +10,14 @@ arrLang = -1
 currLesson = -1
 currLang = -1
 currQuestionNum = 1
+correctQuestions = 0
 totalQuestionNum = 10
 questionArray = ["Write down the character for: 'a'", "Write down the character for: 'i'", "Write down the character for: 'u'",
                  "Write down the character for: 'e'", "Write down the character for: 'o'", "Write down the character for: 'ka'",
                  "Write down the character for: 'ki'", "Write down the character for: 'ku'", "Write down the character for: 'ke'",
                  "Write down the character for: 'ko'"]
+correctAnswer = 0
+profileNames = ["Amanda", "Brian", "Mike", "Claire"]
 
 def generateLessons(screen, lang):
     global lessonArr
@@ -34,13 +38,36 @@ def generateLessons(screen, lang):
     svLayout.add_widget(layout)
     screen.add_widget(svLayout)
 
+def generateProfileList(screen):
+    layout = GridLayout(cols=1, spacing=15, size_hint_y=None, padding=[100, 0, 0, 0])
+    layout.bind(minimum_height=layout.setter('height'))
+    for i in range(len(profileNames)):
+        button = Button(text=profileNames[i],
+                        size_hint=(None, None),
+                        border=(20, 20, 20, 20),
+                        size=(120, 40))
+        button.bind(on_press=screen.testFunction)
+        layout.add_widget(button)
+    svLayout = ScrollView(size_hint=(1, None), size=(70, 300), do_scroll_x=False, do_scroll_y=True,
+                          pos_hint={'center_x': .4, 'center_y': .5})
+    svLayout.add_widget(layout)
+    screen.add_widget(svLayout)
+
 def setLesson(lessonNum, lang):
-    global currLesson, currLang, arrLang
+    global currLesson, currLang, arrLang, lessonArr
+    if lang != currLang:
+        repopulateLessonArray(lang)
     currLesson = int(lessonNum) - 1
     currLang = int(lang)
     arrLang = currLang
 
+def repopulateLessonArray(lang):
+    global lessonArr
+    lessonArr = io.readJsonLessons(lang)
+
 def setAttr(screen):
+    global currQuestionNum
+    currQuestionNum = 1
     screen.ids.lessonText.text = langTypes[currLang]
     screen.ids.lessonNum.text = "Lesson " + str(currLesson + 1)
     screen.ids.lessonTitle.text = lessonArr[currLesson]
@@ -63,3 +90,42 @@ def getNextQuestion(screen):
         screen.ids.questionNum.text = "Q: " + str(currQuestionNum) + "/" + str(totalQuestionNum)
         currQuestionNum += 1
         return True
+
+def getSelectedLanguage():
+    return langTypes[currLang]
+
+def getCurrentLessonNum():
+    return currLesson
+
+def loadNextLessonInfo():
+    global currLesson, currQuestionNum
+    currLesson += 1
+
+def resetCurrLessonProg():
+    global currQuestionNum
+    currQuestionNum = 1
+
+def getCurrLessonTitle():
+    return lessonArr[currLesson]
+
+def getCorrectQuestionCount():
+    return correctQuestions
+
+def getTotalQuestionCount():
+    return totalQuestionNum
+
+def determineCorrectness():
+    global correctAnswer
+    if correctAnswer == 0:
+        return "Correct"
+    else:
+        return "Incorrect"
+
+def checkAnswer(img):
+    global correctQuestions, correctAnswer
+    num = randrange(2)
+    if num == 0:
+        correctAnswer = 0
+        correctQuestions += 1
+    else:
+        correctAnswer = 1
