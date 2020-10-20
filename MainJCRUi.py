@@ -1,6 +1,7 @@
 from kivy.config import Config
 from kivy.lang import Builder
 from kivy.app import App
+from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.widget import Widget
 from kivy.graphics import Color, Line
@@ -30,6 +31,21 @@ class CourseScreen(Screen):
 
 # View and select profiles for the different users
 class ProfileScreen(Screen):
+    def __init__(self, **kwargs):
+        super(ProfileScreen, self).__init__(**kwargs)
+        self.flag = 0
+
+    def on_pre_enter(self, *args):
+        if self.flag == 0:
+            print("hello")
+            lLogic.generateProfileList(self)
+            self.flag = 1
+
+    def testFunction(self, args):
+        print(args.id)
+    pass
+
+class ProfilePopup(RelativeLayout):
     pass
 
 # Main screen manager to handle control of the different screens

@@ -87,23 +87,55 @@
 
 <ProfileScreen>:
     name: 'profiles'
-    BoxLayout:
-        orientation: 'vertical'
-        BoxLayout:
-            orientation: 'horizontal'
-            Label:
-                text: 'Name: '
-                size_hint_y: None
-            TextInput:
-                id: myTextInput
-                font_size: 20
-                size_hint_y: None
-                height: 50
-                text: 'default'
+    RelativeLayout:
+        size: 500, 800
+        Label:
+            text: 'Profiles'
+            font_size: 36
+            pos_hint: {'center_x': .5, 'center_y': .95}
+        Label:
+            text: 'Created Profiles'
+            font_size: 24
+            pos_hint: {'center_x': .25, 'center_y': .74}
+        Label:
+            text: 'Profile created successfully!'
+            font_size: 18
+            pos_hint: {'center_x': .7, 'center_y': .65}
+        Label:
+            text: 'Profile deleted successfully!'
+            font_size: 18
+            pos_hint: {'center_x': .7, 'center_y': .5}
+        Label:
+            text: 'Highest Hiragana Lesson Completed: 1'
+            font_size: 18
+            pos_hint: {'center_x': .38, 'center_y': .3}
+        Label:
+            text: 'Highest Katakana Lesson Completed: 1'
+            font_size: 18
+            pos_hint: {'center_x': .38, 'center_y': .2}
+        Label:
+            text: 'Highest Kanji Lesson Completed: 1'
+            font_size: 18
+            pos_hint: {'center_x': .35, 'center_y': .1}
         Button:
-            text: 'back to start screen'
+            text: 'New'
+            font_size: 20
+            size_hint: None, None
+            size: 80, 40
+            pos_hint: {'center_x': .7, 'center_y': .7}
+        Button:
+            text: 'Delete'
+            font_size: 20
+            size_hint: None, None
+            size: 80, 40
+            pos_hint: {'center_x': .7, 'center_y': .55}
+        Button:
+            text: 'Main Menu'
             font_size: 15
             on_release: app.root.current = 'start'
+            size_hint: None, None
+            size: 80, 40
+            pos_hint: {'center_x': .1, 'center_y': .95}
 
 <HiraganaLessonScreen>
     name: 'hLessons'

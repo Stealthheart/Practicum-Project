@@ -17,6 +17,7 @@ questionArray = ["Write down the character for: 'a'", "Write down the character 
                  "Write down the character for: 'ki'", "Write down the character for: 'ku'", "Write down the character for: 'ke'",
                  "Write down the character for: 'ko'"]
 correctAnswer = 0
+profileNames = ["Amanda", "Brian", "Mike", "Claire"]
 
 def generateLessons(screen, lang):
     global lessonArr
@@ -34,6 +35,21 @@ def generateLessons(screen, lang):
         layout.add_widget(button)
     svLayout = ScrollView(size_hint=(1, None), size=(500, 550), do_scroll_x=False, do_scroll_y=True,
                           pos_hint={'center_x': .5, 'center_y': .5})
+    svLayout.add_widget(layout)
+    screen.add_widget(svLayout)
+
+def generateProfileList(screen):
+    layout = GridLayout(cols=1, spacing=15, size_hint_y=None, padding=[100, 0, 0, 0])
+    layout.bind(minimum_height=layout.setter('height'))
+    for i in range(len(profileNames)):
+        button = Button(text=profileNames[i],
+                        size_hint=(None, None),
+                        border=(20, 20, 20, 20),
+                        size=(120, 40))
+        button.bind(on_press=screen.testFunction)
+        layout.add_widget(button)
+    svLayout = ScrollView(size_hint=(1, None), size=(70, 300), do_scroll_x=False, do_scroll_y=True,
+                          pos_hint={'center_x': .4, 'center_y': .5})
     svLayout.add_widget(layout)
     screen.add_widget(svLayout)
 
