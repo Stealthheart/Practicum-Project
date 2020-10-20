@@ -23,10 +23,24 @@ with open("uiDesignMain.kv", encoding='utf-8') as f:
 
 # Main menu screen
 class StartScreen(Screen):
+    def __init__(self, **kwargs):
+        super(StartScreen, self).__init__(**kwargs)
+        with self.canvas.after:
+            col = [1, 1, 1, 1]
+            Color(*col)
+            Line(rectangle=(25, 600, 450, 150), width=5)
+            Line(rectangle=(25, 25, 450, 575), width=5)
     pass
 
 # Lists the courses (Hira, Kata, Kanji)
 class CourseScreen(Screen):
+    def __init__(self, **kwargs):
+        super(CourseScreen, self).__init__(**kwargs)
+        with self.canvas.after:
+            col = [1, 1, 1, 1]
+            Color(*col)
+            Line(rectangle=(25, 685, 450, 75), width=5)
+            Line(rectangle=(25, 25, 450, 660), width=5)
     pass
 
 # View and select profiles for the different users
@@ -34,6 +48,13 @@ class ProfileScreen(Screen):
     def __init__(self, **kwargs):
         super(ProfileScreen, self).__init__(**kwargs)
         self.flag = 0
+        with self.canvas.after:
+            col = [1, 1, 1, 1]
+            Color(*col)
+            Line(rectangle=(25, 685, 450, 75), width=5)
+            Line(rectangle=(25, 25, 450, 660), width=5)
+            Line(rectangle=(25, 25, 450, 260), width=5)
+            Line(rectangle=(25, 285, 200, 295), width=5)
 
     def on_pre_enter(self, *args):
         if self.flag == 0:
@@ -60,7 +81,12 @@ class HiraganaLessonScreen(Screen):
     def __init__(self, **kwargs):
         super(HiraganaLessonScreen, self).__init__(**kwargs)
         self.flag = 0
-        # self.add_buttons()
+        with self.canvas.after:
+            col = [1, 1, 1, 1]
+            Color(*col)
+            Line(rectangle=(25, 685, 450, 75), width=5)
+            Line(rectangle=(25, 25, 450, 660), width=5)
+            Line(rectangle=(25, 25, 450, 90), width=5)
 
     def on_pre_enter(self):
         if self.flag == 0:
@@ -83,7 +109,12 @@ class KatakanaLessonScreen(Screen):
     def __init__(self, **kwargs):
         super(KatakanaLessonScreen, self).__init__(**kwargs)
         self.flag = 0
-        # self.add_buttons()
+        with self.canvas.after:
+            col = [1, 1, 1, 1]
+            Color(*col)
+            Line(rectangle=(25, 685, 450, 75), width=5)
+            Line(rectangle=(25, 25, 450, 660), width=5)
+            Line(rectangle=(25, 25, 450, 90), width=5)
 
     def on_pre_enter(self):
         if self.flag == 0:
@@ -107,6 +138,13 @@ class KanjiLessonScreen(Screen):
     def __init__(self, **kwargs):
         super(KanjiLessonScreen, self).__init__(**kwargs)
         self.flag = 0
+        with self.canvas.after:
+            col = [1, 1, 1, 1]
+            Color(*col)
+            Line(rectangle=(25, 685, 450, 75), width=5)
+            Line(rectangle=(25, 25, 450, 660), width=5)
+            Line(rectangle=(25, 25, 450, 90), width=5)
+
 
     def on_pre_enter(self):
         if self.flag == 0:
@@ -130,6 +168,12 @@ class KanjiLessonScreen(Screen):
 class PriorToQuestionsScreen(Screen):
     def __init__(self, **kwargs):
         super(PriorToQuestionsScreen, self).__init__(**kwargs)
+        with self.canvas.after:
+            col = [1, 1, 1, 1]
+            Color(*col)
+            Line(rectangle=(25, 675, 450, 85), width=5)
+            Line(rectangle=(25, 25, 450, 325), width=5)
+            Line(rectangle=(25, 350, 450, 325), width=5)
 
     def on_pre_enter(self, *args):
         lLogic.setAttr(self)
