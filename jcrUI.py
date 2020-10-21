@@ -33,17 +33,21 @@ class CourseScreen(Screen):
         super(CourseScreen, self).__init__(**kwargs)
     pass
 
-# View and select profiles for the different users
+'''
+    This screen holds the profile creation, selection, and deletion. Not yet fully implemented.
+'''
 class ProfileScreen(Screen):
     def __init__(self, **kwargs):
         super(ProfileScreen, self).__init__(**kwargs)
         self.flag = 0
 
+    # Generates the profile list prior to entering
     def on_pre_enter(self, *args):
         if self.flag == 0:
             uiLogic.generateProfileList(self)
             self.flag = 1
 
+    # Change the selected profile.
     def selectProfile(self, args):
         print(args.id)
     pass
@@ -64,11 +68,13 @@ class HiraganaLessonScreen(Screen):
         super(HiraganaLessonScreen, self).__init__(**kwargs)
         self.flag = 0
 
+    # Generates the lesson list prior to entering the screen. Only will run once.
     def on_pre_enter(self):
         if self.flag == 0:
             uiLogic.generateLessonList(self, 0)
             self.flag = 1
 
+    # Loads the selected lesson
     def setLesson(self, args):
         uiLogic.setCurrLesson(args.id, 0)
         print(args.id)
@@ -86,11 +92,13 @@ class KatakanaLessonScreen(Screen):
         super(KatakanaLessonScreen, self).__init__(**kwargs)
         self.flag = 0
 
+    #Generates the lesson list prior to entering the screen. Only will run once.
     def on_pre_enter(self):
         if self.flag == 0:
             uiLogic.generateLessonList(self, 1)
             self.flag = 1
 
+    # Loads the selected lesson
     def setLesson(self, args):
         uiLogic.setCurrLesson(args.id, 1)
         print(args.id)
@@ -109,11 +117,13 @@ class KanjiLessonScreen(Screen):
         super(KanjiLessonScreen, self).__init__(**kwargs)
         self.flag = 0
 
+    # Generates the lesson list prior to entering the screen. Only will run once.
     def on_pre_enter(self):
         if self.flag == 0:
             uiLogic.generateLessonList(self, 2)
             self.flag = 1
 
+    # Loads the selected lesson
     def setLesson(self, args):
         uiLogic.setCurrLesson(args.id, 2)
         print(args.id)
@@ -132,9 +142,11 @@ class PriorToQuestionsScreen(Screen):
     def __init__(self, **kwargs):
         super(PriorToQuestionsScreen, self).__init__(**kwargs)
 
+    # Sets the information of the screen to the appropriate lesson info prior to entering
     def on_pre_enter(self, *args):
         uiLogic.setAttr(self)
 
+    # Displays the help popup. Will be changed with lesson implementation.
     def displayPopup(self):
         popup = Popup(title='Characters To Know',
                       content=Label(font_name="fonts/meiryo.ttf",
@@ -147,6 +159,7 @@ class PriorToQuestionsScreen(Screen):
                       size=(400, 400))
         popup.open()
 
+    # Loads the lesson list we came from if button is pressed
     def loadOriginalLessonList(self):
         self.manager.current = uiLogic.getCurrLessonScreen()
 
@@ -163,19 +176,24 @@ class QuestionScreen(Screen):
     def __init__(self, **kwargs):
         super(QuestionScreen, self).__init__(**kwargs)
 
+    # Loads the question information prior to entering. Also disables the next question button.
     def on_pre_enter(self):
         uiLogic.getNextQuestion(self)
         self.ids.nextQBtn.disabled = True
 
+    # Will send the answer to the logic to determine if it is correct.
     def getAnswerResult(self):
         return uiLogic.isAnswerCorrect()
 
+    # This will retrieve the answer the AI determines
     def getUserAnswer(self):
         return "あ"
 
+    # This will retrieve the correct answer stored in the question
     def getCorrectAnswer(self):
         return "あ"
 
+    # Retrieves the next question. Will display the results screen if no more remain.
     def getNextQuestion(self):
         lessContinues = uiLogic.getNextQuestion(self)
         if not lessContinues:
@@ -184,32 +202,45 @@ class QuestionScreen(Screen):
     pass
 
 
-# shows overall results after a completed lesson
+'''
+    This class will display the result screen after completing a lesson. The screen will display the lesson number,
+    title, language type, accuracy, correct question count, total question count, and a message detailing if you
+    unlocked the next lesson. Also contains buttons to go back to lesson list, immediately move to the next lesson,
+    or to go back to the main menu.
+'''
 class ResultsScreen(Screen):
 
     def __init__(self, **kwargs):
         super(ResultsScreen, self).__init__(**kwargs)
 
+    # Loads all relevant information prior to entering the screen.
     def on_pre_enter(self, *args):
+        # Stores percentage value for repeated use.
         percentage = 100 * (float(uiLogic.getCorrectQuestionCount()) / float(uiLogic.getTotalQuestionCount()))
 
+        # Stores correct information to display in the relevant fields.
         self.ids.resCurrLessonLang.text = uiLogic.getSelectedLanguageName()
         self.ids.resCurrLessonNum.text = "Lesson " + str(uiLogic.getCurrentLessonNum())
         self.ids.resCurrLessonTitle.text = uiLogic.getCurrentLessonTitle()
         self.ids.resTotalCorrect.text = str(uiLogic.getCorrectQuestionCount()) + "/" + str(uiLogic.getTotalQuestionCount()) + " correct"
         self.ids.resAccuracy.text = "Accuracy: " + str(percentage) + "%"
+
+        # Displays a different message depending on if you passed the lesson or not.
         if percentage >= 80:
             self.ids.resLessonUnlockLbl.text = "You have unlocked the next lesson!"
         else:
             self.ids.resLessonUnlockLbl.text = "Try again for 80% to unlock the next lesson."
 
+        # disables next lesson button if there are no more lessons after the one completed.
         if not uiLogic.checkIfMoreLessons():
             self.ids.resNextLessonBtn.disabled = True
 
+    # Loads the next lesson immediately
     def loadNextLesson(self):
         uiLogic.setupNextLessonInfo()
         self.manager.current = 'priorToQuestions'
 
+    # Loads the lesson list of the language selected.
     def loadLessonList(self):
         self.manager.current = uiLogic.getCurrLessonScreen()
 
@@ -225,22 +256,30 @@ wide = 2  # holds the width of the line to be drawn
     submission and when a button is pressed.
 '''
 class MyPaintWidget(Widget):
+    # creates a new property for the widget
     col = ListProperty(color)
 
+    # Stores the drawn answer into a jpg, then passes it to the logic to check against the AI.
     def submitAnswer(self):
         self.export_to_png("image.jpg")
         image = open('image.jpg')
         uiLogic.sendAnswer(image)
 
+    # Captures the x and y coordinates when the user clicks or presses down on the drawing canvas
     def on_touch_down(self, touch):
         global xCoord, yCoord, wide
+
+        # Determines if thr coordinates are within the canvas.
         if checkWithinCanvas(touch.x, touch.y):
+
+            # If so, the line is allowed to be drawn
             with self.canvas:
                 Color(*self.col)
                 touch.ud['line'] = Line(points=(touch.x, touch.y), width=wide)
                 xCoord = touch.x
                 yCoord = touch.y
 
+    # Captures the movement of the user, and draws the line if we are within the canvas.
     def on_touch_move(self, touch):
         global xCoord, yCoord, wide
         if checkWithinCanvas(touch.x, touch.y) and checkWithinCanvas(xCoord, yCoord):
@@ -248,13 +287,14 @@ class MyPaintWidget(Widget):
 
 '''
     Helper method for the drawing UI. Checks if the current coordinates being drawn are within the bounds for the
-    drawing UI.
+    drawing UI. The canvas begins at x = 25, and extends to x = 475. The y-coordinates begin at 225, and extends to
+    600.
 '''
 def checkWithinCanvas(x, y):
     if 25 < x < 475 and 225 < y < 600:
         return True
 
-
+# Driver method
 class ScreenManagerTestApp(App):
     def build(self):
         return MyScreenManager()
