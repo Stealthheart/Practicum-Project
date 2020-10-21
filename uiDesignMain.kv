@@ -30,6 +30,13 @@
         pos_hint: {'center_x': .75, 'center_y': .15}
         opacity: .5
     RelativeLayout:
+        canvas:
+            Line:
+                width: 5
+                rectangle: (25, 600, 450, 160)
+            Line:
+                width: 5
+                rectangle: (25, 25, 450, 575)
         size: 500, 800
         Label:
             text: 'Japanese'
@@ -67,6 +74,13 @@
     name: 'course'
     RelativeLayout:
         size: 500, 800
+        canvas.after:
+            Line:
+                width: 5
+                rectangle: (25, 685, 450, 75)
+            Line:
+                width: 5
+                rectangle: (25, 25, 450, 660)
         Label:
             text: 'Courses'
             font_size: 40
@@ -104,6 +118,19 @@
     name: 'profiles'
     RelativeLayout:
         size: 500, 800
+        canvas.after:
+            Line:
+                width: 5
+                rectangle: (25, 685, 450, 75)
+            Line:
+                width: 5
+                rectangle: (25, 25, 450, 660)
+            Line:
+                width: 5
+                rectangle: (25, 25, 450, 260)
+            Line:
+                width: 5
+                rectangle: (25, 285, 200, 295)
         Label:
             text: 'Profiles'
             font_size: 36
@@ -239,6 +266,16 @@
         pos_hint: {'center_x': .5, 'center_y': .32}
         opacity: .5
     RelativeLayout:
+        canvas.after:
+            Line:
+                width: 5
+                rectangle: (25, 675, 450, 85)
+            Line:
+                width: 5
+                rectangle: (25, 25, 450, 325)
+            Line:
+                width: 5
+                rectangle: (25, 350, 450, 325)
         Label:
             id: lessonText
             text: 'Hira, Kata, Kanji'
@@ -430,6 +467,7 @@
             size: 150, 80
             pos_hint: {'center_x': .19, 'center_y': .1}
         Button:
+            id: resNextLessonBtn
             text: 'Next Lesson'
             font_size: 16
             on_release: root.loadNextLesson()
