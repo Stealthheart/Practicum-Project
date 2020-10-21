@@ -14,7 +14,29 @@
 
 <StartScreen>:
     name: 'start'
+    Image:
+        source: 'Images/test.png'
+        size: 150, 150
+        pos_hint: {'center_x': .2, 'center_y': .25}
+        opacity: .5
+    Image:
+        source: 'Images/blackImg.png'
+        size: 150, 150
+        pos_hint: {'center_x': .7, 'center_y': .65}
+        opacity: .5
+    Image:
+        source: 'Images/helloImg.png'
+        size: 150, 150
+        pos_hint: {'center_x': .75, 'center_y': .15}
+        opacity: .5
     RelativeLayout:
+        canvas:
+            Line:
+                width: 5
+                rectangle: (25, 600, 450, 160)
+            Line:
+                width: 5
+                rectangle: (25, 25, 450, 575)
         size: 500, 800
         Label:
             text: 'Japanese'
@@ -52,6 +74,13 @@
     name: 'course'
     RelativeLayout:
         size: 500, 800
+        canvas.after:
+            Line:
+                width: 5
+                rectangle: (25, 685, 450, 75)
+            Line:
+                width: 5
+                rectangle: (25, 25, 450, 660)
         Label:
             text: 'Courses'
             font_size: 40
@@ -89,14 +118,27 @@
     name: 'profiles'
     RelativeLayout:
         size: 500, 800
+        canvas.after:
+            Line:
+                width: 5
+                rectangle: (25, 685, 450, 75)
+            Line:
+                width: 5
+                rectangle: (25, 25, 450, 660)
+            Line:
+                width: 5
+                rectangle: (25, 25, 450, 260)
+            Line:
+                width: 5
+                rectangle: (25, 285, 200, 295)
         Label:
             text: 'Profiles'
             font_size: 36
-            pos_hint: {'center_x': .5, 'center_y': .95}
+            pos_hint: {'center_x': .5, 'center_y': .90}
         Label:
             text: 'Created Profiles'
             font_size: 24
-            pos_hint: {'center_x': .25, 'center_y': .74}
+            pos_hint: {'center_x': .25, 'center_y': .76}
         Label:
             text: 'Profile created successfully!'
             font_size: 18
@@ -135,10 +177,20 @@
             on_release: app.root.current = 'start'
             size_hint: None, None
             size: 80, 40
-            pos_hint: {'center_x': .1, 'center_y': .95}
+            pos_hint: {'center_x': .15, 'center_y': .90}
 
 <HiraganaLessonScreen>
     name: 'hLessons'
+    canvas.before:
+        Line:
+            width: 5
+            rectangle: (25, 685, 450, 75)
+        Line:
+            width: 5
+            rectangle: (25, 25, 450, 660)
+        Line:
+            width: 5
+            rectangle: (25, 25, 450, 90)
     RelativeLayout:
         size: 500, 800
         Label:
@@ -151,10 +203,20 @@
             on_release: app.root.current = 'course'
             size_hint: None, None
             size: 250, 40
-            pos_hint: {'center_x': .5, 'center_y': .1}
+            pos_hint: {'center_x': .5, 'center_y': .09}
 
 <KatakanaLessonScreen>
     name: 'kataLessons'
+    canvas.before:
+        Line:
+            width: 5
+            rectangle: (25, 685, 450, 75)
+        Line:
+            width: 5
+            rectangle: (25, 25, 450, 660)
+        Line:
+            width: 5
+            rectangle: (25, 25, 450, 90)
     RelativeLayout:
         size: 500, 800
         Label:
@@ -171,6 +233,16 @@
 
 <KanjiLessonScreen>
     name: 'kanjiLessons'
+    canvas.before:
+        Line:
+            width: 5
+            rectangle: (25, 685, 450, 75)
+        Line:
+            width: 5
+            rectangle: (25, 25, 450, 660)
+        Line:
+            width: 5
+            rectangle: (25, 25, 450, 90)
     RelativeLayout:
         size: 500, 800
         Label:
@@ -188,49 +260,64 @@
 <PriorToQuestionsScreen>
     name: 'priorToQuestions'
     id: priorPP
+    Image:
+        source: 'Images/goodLuckImg.png'
+        size: 150, 150
+        pos_hint: {'center_x': .5, 'center_y': .32}
+        opacity: .5
     RelativeLayout:
+        canvas.after:
+            Line:
+                width: 5
+                rectangle: (25, 675, 450, 85)
+            Line:
+                width: 5
+                rectangle: (25, 25, 450, 325)
+            Line:
+                width: 5
+                rectangle: (25, 350, 450, 325)
         Label:
             id: lessonText
             text: 'Hira, Kata, Kanji'
             size_hint_y: None
-            font_size: 60
-            pos_hint: {'center_x': .5, 'center_y': .95}
+            font_size: 56
+            pos_hint: {'center_x': .5, 'center_y': .90}
         Label:
             id: lessonNum
             text: 'Lesson X'
             size_hint_y: None
             font_size: 40
-            pos_hint: {'center_x': .5, 'center_y': .85}
+            pos_hint: {'center_x': .5, 'center_y': .80}
         Label:
             id: lessonTitle
             text: 'Placeholder'
             size_hint_y: None
             font_size: 30
-            pos_hint: {'center_x': .5, 'center_y': .70}
+            pos_hint: {'center_x': .5, 'center_y': .65}
         Label:
             text: '20 Questions'
             size_hint_y: None
             font_size: 20
-            pos_hint: {'center_x': .5, 'center_y': .60}
+            pos_hint: {'center_x': .5, 'center_y': .55}
         Label:
             text: '80% accuracy for next unlock'
             size_hint_y: None
             font_size: 18
-            pos_hint: {'center_x': .5, 'center_y': .55}
+            pos_hint: {'center_x': .5, 'center_y': .50}
         Button:
             text: 'Start Lesson'
             font_size: 16
             on_release: app.root.current = 'question'
             size_hint: None, None
             size: 250, 40
-            pos_hint: {'center_x': .5, 'center_y': .35}
+            pos_hint: {'center_x': .5, 'center_y': .30}
         Button:
             text: '?'
             font_size: 16
             on_release: priorPP.displayPopup()
             size_hint: None, None
             size: 50, 50
-            pos_hint: {'center_x': .95, 'center_y': .5}
+            pos_hint: {'center_x': .85, 'center_y': .5}
         Button:
             text: 'Back to Lessons'
             font_size: 14
@@ -238,10 +325,21 @@
             size_hint: None, None
             size: 250, 40
             pos_hint: {'center_x': .5, 'center_y': .2}
+        Button:
+            text: 'Main Menu'
+            font_size: 14
+            on_release: app.root.current = 'start'
+            size_hint: None, None
+            size: 80, 40
+            pos_hint: {'center_x': .15, 'center_y': .9}
 
 <QuestionScreen>
     name: 'question'
     id: questionScrn
+    canvas.before:
+        Line:
+            width: 5
+            rectangle: (25, 225, 450, 375)
     RelativeLayout:
         MyPaintWidget:
             id: drawingCanvas
@@ -321,6 +419,10 @@
 
 <ResultsScreen>
     name: 'results'
+    canvas.before:
+        Line:
+            width: 5
+            rectangle: (25, 175, 450, 525)
     RelativeLayout:
         Label:
             text: 'Results'
@@ -365,6 +467,7 @@
             size: 150, 80
             pos_hint: {'center_x': .19, 'center_y': .1}
         Button:
+            id: resNextLessonBtn
             text: 'Next Lesson'
             font_size: 16
             on_release: root.loadNextLesson()
