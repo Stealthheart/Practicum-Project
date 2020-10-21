@@ -81,12 +81,6 @@ class HiraganaLessonScreen(Screen):
     def __init__(self, **kwargs):
         super(HiraganaLessonScreen, self).__init__(**kwargs)
         self.flag = 0
-        with self.canvas.after:
-            col = [1, 1, 1, 1]
-            Color(*col)
-            Line(rectangle=(25, 685, 450, 75), width=5)
-            Line(rectangle=(25, 25, 450, 660), width=5)
-            Line(rectangle=(25, 25, 450, 90), width=5)
 
     def on_pre_enter(self):
         if self.flag == 0:
@@ -109,12 +103,6 @@ class KatakanaLessonScreen(Screen):
     def __init__(self, **kwargs):
         super(KatakanaLessonScreen, self).__init__(**kwargs)
         self.flag = 0
-        with self.canvas.after:
-            col = [1, 1, 1, 1]
-            Color(*col)
-            Line(rectangle=(25, 685, 450, 75), width=5)
-            Line(rectangle=(25, 25, 450, 660), width=5)
-            Line(rectangle=(25, 25, 450, 90), width=5)
 
     def on_pre_enter(self):
         if self.flag == 0:
@@ -138,13 +126,6 @@ class KanjiLessonScreen(Screen):
     def __init__(self, **kwargs):
         super(KanjiLessonScreen, self).__init__(**kwargs)
         self.flag = 0
-        with self.canvas.after:
-            col = [1, 1, 1, 1]
-            Color(*col)
-            Line(rectangle=(25, 685, 450, 75), width=5)
-            Line(rectangle=(25, 25, 450, 660), width=5)
-            Line(rectangle=(25, 25, 450, 90), width=5)
-
 
     def on_pre_enter(self):
         if self.flag == 0:
@@ -205,7 +186,6 @@ class PriorToQuestionsScreen(Screen):
 class QuestionScreen(Screen):
     def __init__(self, **kwargs):
         super(QuestionScreen, self).__init__(**kwargs)
-        showDrawingUiBorder(self)
 
     def on_pre_enter(self):
         lLogic.getNextQuestion(self)
@@ -233,10 +213,6 @@ class ResultsScreen(Screen):
 
     def __init__(self, **kwargs):
         super(ResultsScreen, self).__init__(**kwargs)
-        with self.canvas.after:
-            col = [1, 1, 1, 1]
-            Color(*col)
-            Line(rectangle=(25, 175, 450, 525), width=5)
 
     def on_pre_enter(self, *args):
         percentage = 100 * (float(lLogic.getCorrectQuestionCount()) / float(lLogic.getTotalQuestionCount()))
@@ -261,7 +237,7 @@ class ResultsScreen(Screen):
     pass
 
 
-clr = [1, 1, 1, 1]  # color array for paint widget
+color = [1, 1, 1, 1]  # color array for paint widget
 xs = 0  # holds the current x coordinate, used for moving the mouse
 ys = 0  # holds the current y coordinate, used for moving the mouse
 wide = 2  # holds the width of the line to be drawn
@@ -270,7 +246,7 @@ wide = 2  # holds the width of the line to be drawn
     submission and when a button is pressed.
 '''
 class MyPaintWidget(Widget):
-    col = ListProperty(clr)
+    col = ListProperty(color)
 
     def submitAnswer(self):
         self.export_to_png("image.jpg")
@@ -280,8 +256,6 @@ class MyPaintWidget(Widget):
     def on_touch_down(self, touch):
         global xs, ys, wide
         if checkWithinCanvas(touch.x, touch.y):
-            self.col = getClr()
-
             with self.canvas:
                 Color(*self.col)
                 touch.ud['line'] = Line(points=(touch.x, touch.y), width=wide)
@@ -291,29 +265,8 @@ class MyPaintWidget(Widget):
     def on_touch_move(self, touch):
         global xs, ys, wide
         if checkWithinCanvas(touch.x, touch.y) and checkWithinCanvas(xs, ys):
-            self.col = getClr()
             if checkWithinCanvas(xs, ys):
                 touch.ud["line"].points += [touch.x, touch.y]
-
-
-'''
-    Helper method for the drawing UI. Returns the global color list. 
-    Exists to help testing and quick modification.
-'''
-def getClr():
-    return clr
-
-
-'''
-    Helper method for Question Screen and Drawing UI. Displays a white border to visualize how large the drawing
-    UI is. (Might not be necessary)
-'''
-def showDrawingUiBorder(self):
-    with self.canvas.after:
-        col = [1, 1, 1, 1]
-        Color(*col)
-        Line(rectangle=(25, 225, 450, 375), width=5)
-
 
 '''
     Helper method for the drawing UI. Checks if the current coordinates being drawn are within the bounds for the
