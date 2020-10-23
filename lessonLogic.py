@@ -36,12 +36,14 @@ def generateLessons(lang):
     array if the language given is different from the one currently set. 
 '''
 def setLesson(lessonNum, lang):
-    global currLesson, currLang, arrLang, lessonArr
+    global currLesson, currLang, arrLang, lessonArr, questionArray, totalQuestionNum
     if lang != currLang:
         repopulateLessonArray(lang)
     currLesson = int(lessonNum) - 1
     currLang = int(lang)
     arrLang = currLang
+    questionArray = io.readLessonQuestions(lessonNum)
+    totalQuestionNum = len(questionArray)
 
 # Resets the lesson array to the given language
 def repopulateLessonArray(lang):
@@ -54,8 +56,9 @@ def getCurrentLessonNum():
 
 # increments the current lesson by one if needed
 def loadNextLessonInfo():
-    global currLesson, currQuestionNum
-    currLesson += 1
+    global currLesson, totalQuestionNum
+    currLesson += 2
+    setLesson(currLesson, currLang)
 
 # Returns the title of the current lesson.
 def getCurrLessonTitle():
@@ -79,7 +82,7 @@ def resetQuestionCounters():
 
 # Returns the next question string.
 def getNextQuestion():
-    return questionArray[currQuestionNum - 1]
+    return questionArray[currQuestionNum - 1][0]
 
 # Returns the question we are currently on.
 def getCurrQuestionCount():
@@ -97,6 +100,9 @@ def getCorrectQuestionCount():
 # Returns the total question count in the lesson
 def getTotalQuestionCount():
     return totalQuestionNum
+
+def getCorrectAnswer():
+    return questionArray[currQuestionNum - 2][2]
 
 #endregion Question Methods
 
@@ -125,3 +131,6 @@ def retrieveResultString():
 # Returns the selected language string.
 def getSelectedLanguage():
     return langTypes[currLang]
+
+def getSelectedLanguageNum():
+    return currLang

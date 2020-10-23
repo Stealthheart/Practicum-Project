@@ -1,4 +1,5 @@
 import json
+from random import randrange
 
 '''
     This class will hold all functions for reading and writing to files.
@@ -18,4 +19,11 @@ def readJsonLessons(lang):
 
     return lessonArray
 
+def readLessonQuestions(lessonNum):
+    fileString = 'hiraganaLessons/hLesson' + str(lessonNum) + '.txt'
+    with open(fileString, 'r', encoding='utf-8') as json_file:
+        questionArray = json.load(json_file)
 
+    print(questionArray)
+
+    return questionArray

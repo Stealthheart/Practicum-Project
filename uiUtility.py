@@ -87,6 +87,7 @@ def setAttr(screen):
     screen.ids.lessonText.text = getSelectedLanguageName()
     screen.ids.lessonNum.text = "Lesson " + str(getCurrentLessonNum())
     screen.ids.lessonTitle.text = getCurrentLessonTitle()
+    screen.ids.questionCount.text = str(getTotalQuestionCount()) + " Questions"
     lLogic.resetQuestionCounters()
 
 # Returns a string depending on if the answer was correct.
@@ -108,6 +109,9 @@ def getNextQuestion(screen):
         screen.ids.questionNum.text = "Q: " + str(currQuestion) + "/" + str(totalQuestions)
         lLogic.incrementQuestionNum()
         return True
+
+def getCorrectAnswer():
+    return lLogic.getCorrectAnswer()
 
 #region Helper Methods
 def checkIfMoreLessons():

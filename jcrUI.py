@@ -191,7 +191,7 @@ class QuestionScreen(Screen):
 
     # This will retrieve the correct answer stored in the question
     def getCorrectAnswer(self):
-        return "あ"
+        return uiLogic.getCorrectAnswer()
 
     # Retrieves the next question. Will display the results screen if no more remain.
     def getNextQuestion(self):
@@ -216,7 +216,7 @@ class ResultsScreen(Screen):
     # Loads all relevant information prior to entering the screen.
     def on_pre_enter(self, *args):
         # Stores percentage value for repeated use.
-        percentage = 100 * (float(uiLogic.getCorrectQuestionCount()) / float(uiLogic.getTotalQuestionCount()))
+        percentage = round(100 * (float(uiLogic.getCorrectQuestionCount()) / float(uiLogic.getTotalQuestionCount())))
 
         # Stores correct information to display in the relevant fields.
         self.ids.resCurrLessonLang.text = uiLogic.getSelectedLanguageName()
