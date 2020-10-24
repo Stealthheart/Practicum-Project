@@ -7,7 +7,7 @@ from kivy.uix.widget import Widget
 from kivy.graphics import Color, Line
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
-from kivy.properties import ListProperty
+from kivy.properties import ListProperty, DictProperty
 
 # Sets the config first
 Config.set('graphics', 'width', '500')
@@ -49,7 +49,7 @@ class ProfileScreen(Screen):
 
     # Change the selected profile.
     def selectProfile(self, args):
-        print(args.id)
+        print(args.profName)
     pass
 
 class ProfilePopup(RelativeLayout):
@@ -64,6 +64,8 @@ class MyScreenManager(ScreenManager):
     set the lesson info for the pre-lesson screen when a lesson is selected.
 '''
 class HiraganaLessonScreen(Screen):
+    ids = DictProperty({})
+
     def __init__(self, **kwargs):
         super(HiraganaLessonScreen, self).__init__(**kwargs)
         self.flag = 0
@@ -76,8 +78,8 @@ class HiraganaLessonScreen(Screen):
 
     # Loads the selected lesson
     def setLesson(self, args):
-        uiLogic.setCurrLesson(args.id, 0)
-        print(args.id)
+        uiLogic.setCurrLesson(args.lessonNum, 0)
+        print("Hi " + args.lessonNum)
         self.manager.current = "priorToQuestions"
 
     pass
@@ -100,8 +102,8 @@ class KatakanaLessonScreen(Screen):
 
     # Loads the selected lesson
     def setLesson(self, args):
-        uiLogic.setCurrLesson(args.id, 1)
-        print(args.id)
+        uiLogic.setCurrLesson(args.lessonNum, 1)
+        print(args.lessonNum)
         self.manager.current = "priorToQuestions"
 
     pass
@@ -125,8 +127,8 @@ class KanjiLessonScreen(Screen):
 
     # Loads the selected lesson
     def setLesson(self, args):
-        uiLogic.setCurrLesson(args.id, 2)
-        print(args.id)
+        uiLogic.setCurrLesson(args.lessonNum, 2)
+        print(args.lessonNum)
         self.manager.current = "priorToQuestions"
 
     pass

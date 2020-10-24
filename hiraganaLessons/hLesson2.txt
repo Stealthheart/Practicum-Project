@@ -16,5 +16,5 @@
  ["Write the missing character:\n ち と つ て", "TA", "た"],
  ["Write the missing character:\n と つ て た", "CHI", "ち"],
  ["Write the missing character:\n と た ち て", "TSU", "つ"],
- ["Write the missing character:\n て と つ た", "TE", "て"],
- ["Write the missing character:\n つ て た て", "TO", "と"]]
+ ["Write the missing character:\n ち と つ た", "TE", "て"],
+ ["Write the missing character:\n つ て た ち", "TO", "と"]]

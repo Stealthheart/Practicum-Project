@@ -27,11 +27,11 @@ def generateLessonList(screen, lang):
     for i in range(len(lessonArr)):
         # Create a new button with appropriate names and ids.
         button = Button(text='Lesson ' + str(i + 1) + ": " + lessonArr[i],
-                        id=str(i + 1),
                         size_hint=(None, None),
                         border = (20, 20, 20, 20),
                         size=(300, 60))
         button.bind(on_press=screen.setLesson)
+        button.lessonNum = str(i + 1)
         layout.add_widget(button)
 
     # Creates a scrollable layout to hold the lessons.
@@ -54,11 +54,11 @@ def generateProfileList(screen):
     for i in range(pLogic.getProfileNameLength()):
         #Creates new button for each element, naming and id'ing them appropriately.
         button = Button(text=pLogic.getProfileName(i),
-                        id=pLogic.getProfileName(i),
                         size_hint=(None, None),
                         border=(20, 20, 20, 20),
                         size=(150, 40))
         button.bind(on_press=screen.selectProfile)
+        button.profName = pLogic.getProfileName(i)
         layout.add_widget(button)
 
     # Creates a scrollable layout to hold the lessons.

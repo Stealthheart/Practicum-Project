@@ -10,7 +10,7 @@ def readJsonLessons(lang):
     if lang == 0:
         fileString = 'hiraganaLessons/hiraLessons.txt'
     elif lang == 1:
-        fileString = 'kataLessons.txt'
+        fileString = 'katakanaLessons/kataLessons.txt'
     else:
         fileString = 'kanjiLessons.txt'
 
@@ -19,8 +19,13 @@ def readJsonLessons(lang):
 
     return lessonArray
 
-def readLessonQuestions(lessonNum):
-    fileString = 'hiraganaLessons/hLesson' + str(lessonNum) + '.txt'
+def readLessonQuestions(lessonNum, lang):
+    if lang == 0:
+        fileString = 'hiraganaLessons/hLesson' + str(lessonNum) + '.txt'
+    elif lang == 1:
+        fileString = 'katakanaLessons/kataLesson' + str(lessonNum) + '.txt'
+    else:
+        fileString = 'hiraganaLessons/hLesson' + str(lessonNum) + '.txt'
     with open(fileString, 'r', encoding='utf-8') as json_file:
         questionArray = json.load(json_file)
 
