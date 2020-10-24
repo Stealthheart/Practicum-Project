@@ -1,1 +1,1 @@
-["Vowels + K Lines", "S + T Lines", "N + H Lines", "M + Y Lines", "R + W + n Lines", "V + K + S + T Lines", "N + H + M Lines", "Y + R + W + n Lines", "V, K, S, T, N, H Lines", "M, Y, R, W, n Lines", "All Katakana"]
+["Vowels + K Lines", "S + T Lines", "N + H Lines", "M + Y Lines", "R + W + n Lines", "V + K + S + T Lines", "N + H + M Lines", "Y + R + W + n Lines", "V, K, S, T, N Lines", "H, M, Y, R, W, n Lines", "All Katakana"]
