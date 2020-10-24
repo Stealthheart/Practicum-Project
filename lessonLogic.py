@@ -42,8 +42,7 @@ def setLesson(lessonNum, lang):
     currLesson = int(lessonNum) - 1
     currLang = int(lang)
     arrLang = currLang
-    if(int(lessonNum) < 3):
-        questionArray = io.readLessonQuestions(lessonNum)
+    questionArray = io.readLessonQuestions(lessonNum)
     totalQuestionNum = len(questionArray)
 
 # Resets the lesson array to the given language
