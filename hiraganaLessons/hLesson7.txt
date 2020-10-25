@@ -12,7 +12,4 @@
  ["Write the missing character:\n ま む め も", "MI", "み"],
  ["Write the missing character:\n み も め ま", "MU", "む"],
  ["Write the missing character:\n も ま み む", "ME", "め"],
- ["Write the missing character:\n み め ま む", "MO", "も"],
- ["Write the missing character:\n よ ゆ", "YA", "や"],
- ["Write the missing character:\n や よ", "YU", "ゆ"],
- ["Write the missing character:\n ゆ や", "YO", "よ"]]
+ ["Write the missing character:\n み め ま む", "MO", "も"]]

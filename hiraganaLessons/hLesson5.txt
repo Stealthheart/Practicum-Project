@@ -8,6 +8,6 @@
  ["Write the character 'n'", "N", "ん"],
  ["Write the missing character:\n り ろ る れ", "RA", "ら"],
  ["Write the missing character:\n れ ろ る ら", "RI", "り"],
- ["Write the missing character:\n み ら ろ り", "RU", "る"],
+ ["Write the missing character:\n れ ら ろ り", "RU", "る"],
  ["Write the missing character:\n ろ る ら り", "RE", "れ"],
  ["Write the missing character:\n ら れ り る", "RO", "ろ"]]

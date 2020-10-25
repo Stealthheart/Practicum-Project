@@ -12,7 +12,7 @@ def readJsonLessons(lang):
     elif lang == 1:
         fileString = 'katakanaLessons/kataLessons.txt'
     else:
-        fileString = 'kanjiLessons.txt'
+        fileString = 'kanjiLessons/kanjiLessons.txt'
 
     with open(fileString, 'r') as json_file:
         lessonArray = json.load(json_file)
@@ -25,7 +25,7 @@ def readLessonQuestions(lessonNum, lang):
     elif lang == 1:
         fileString = 'katakanaLessons/kataLesson' + str(lessonNum) + '.txt'
     else:
-        fileString = 'hiraganaLessons/hLesson' + str(lessonNum) + '.txt'
+        fileString = 'kanjiLessons/kanjiLesson' + str(lessonNum) + '.txt'
     with open(fileString, 'r', encoding='utf-8') as json_file:
         questionArray = json.load(json_file)
 
