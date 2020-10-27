@@ -64,8 +64,6 @@ class MyScreenManager(ScreenManager):
     set the lesson info for the pre-lesson screen when a lesson is selected.
 '''
 class HiraganaLessonScreen(Screen):
-    ids = DictProperty({})
-
     def __init__(self, **kwargs):
         super(HiraganaLessonScreen, self).__init__(**kwargs)
         self.flag = 0
