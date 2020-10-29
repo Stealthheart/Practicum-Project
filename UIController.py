@@ -80,3 +80,9 @@ def getProfileName(index):
 
 def generateLessons(lang):
     return lLogic.generateLessons(lang)
+
+def removeImgList():
+    lLogic.deleteImgList()
+
+def getImgList():
+    return lLogic.getImagePaths()

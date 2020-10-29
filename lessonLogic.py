@@ -43,7 +43,7 @@ def setLesson(lessonNum, lang):
     currLang = int(lang)
     arrLang = currLang
     questionArray = io.readLessonQuestions(lessonNum, currLang)
-    totalQuestionNum = len(questionArray)
+    totalQuestionNum = len(questionArray) - 1
 
 # Resets the lesson array to the given language
 def repopulateLessonArray(lang):
@@ -134,3 +134,9 @@ def getSelectedLanguage():
 
 def getSelectedLanguageNum():
     return currLang
+
+def deleteImgList():
+    questionArray.pop(0)
+
+def getImagePaths():
+    return questionArray[0]

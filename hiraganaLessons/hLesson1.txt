@@ -1,4 +1,5 @@
-[["Write the character 'a'", "A", "あ"],
+[["A", "I", "U", "E", "O", "KA", "KI", "KU", "KE", "KO"],
+ ["Write the character 'a'", "A", "あ"],
  ["Write the character 'i'", "I", "い"],
  ["Write the character 'u'", "U", "う"],
  ["Write the character 'e'", "E", "え"],

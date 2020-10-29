@@ -1,8 +1,11 @@
+import os
+
 from kivy.config import Config
 from kivy.lang import Builder
 from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.image import Image
 from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.scrollview import ScrollView
@@ -186,16 +189,18 @@ class PriorToQuestionsScreen(Screen):
 
     # Displays the help popup. Will be changed with lesson implementation.
     def displayPopup(self):
-        layout_popup = GridLayout(cols=1, spacing=10, size_hint_y=None)
+        lessonNum = str(uiLogic.getCurrentLessonNum())
+        charList = uiLogic.getImgList()
+        layout_popup = GridLayout(cols=1, spacing=10, size_hint_y=None, padding=[120,0,0,0])
         layout_popup.bind(minimum_height=layout_popup.setter('height'))
-
-        for i in range(0, 15):
-            btn1 = Button(text=str(i), id=str(i), size_hint_y=None)
-            layout_popup.add_widget(btn1)
+        path = "Images/hiraganaLessonImgs/Lesson" + lessonNum
+        for char in charList:
+            img1 = Image(source=path + "/so" + char + ".png", size_hint=(None, None), size=(128, 128))
+            layout_popup.add_widget(img1)
 
         root = ScrollView(size_hint=(None, None), size=(375,425))
         root.add_widget(layout_popup)
-        popup = Popup(title='Numbers', content=root, size=(400,500), size_hint=(None, None))
+        popup = Popup(title='Characters To Know', content=root, size=(400,500), size_hint=(None, None))
         popup.open()
 
     # Loads the lesson list we came from if button is pressed
@@ -204,6 +209,7 @@ class PriorToQuestionsScreen(Screen):
 
     # Loads the question UI screen
     def startLesson(self):
+        uiLogic.removeImgList()
         changeScreen(self, 'question')
 
     # Loads the main menu UI screen
