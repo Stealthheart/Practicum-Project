@@ -1,4 +1,5 @@
-[["Write the missing character:\n う お い え", "A", "あ"],
+[["A", "I", "U", "E", "O", "KA", "KI", "KU", "KE", "KO", "SA", "SHI", "SU", "SE", "SO", "TA", "CHI", "TSU", "TE", "TO"],
+ ["Write the missing character:\n う お い え", "A", "あ"],
  ["Write the missing character:\n お え う あ", "I", "い"],
  ["Write the missing character:\n い え あ お", "U", "う"],
  ["Write the missing character:\n あ い お う", "E", "え"],

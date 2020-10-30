@@ -1,4 +1,5 @@
-[["Write the character 'a'", "A", "あ"],
+[["A", "I", "U", "E", "O", "KA", "KI", "KU", "KE", "KO", "SA", "SHI", "SU", "SE", "SO", "TA", "CHI", "TSU", "TE", "TO", "NA", "NI", "NU", "NE", "NO", "HA", "HI", "FU", "HE", "HO", "MA", "MI", "MU", "ME", "MO", "YA", "YU", "YO", "RA", "RI", "RU", "RE", "RO", "WA", "WO", "N", "GA", "GI", "GU", "GE", "GO", "ZA", "S-JI", "S-JU", "ZE", "ZO", "DA", "T-JI", "T-JU", "DE", "DO", "BA", "BI", "BU", "BE", "BO", "PA", "PI", "PU", "PE", "PO", "KYA", "KYU", "KYO", "GYA", "GYU", "GYO", "SHA", "SHU", "SHO", "JYA", "JYU", "JYO", "MYA", "MYU", "MYO", "NYA", "NYU", "NYO", "HYA", "HYU", "HYO", "BYA", "BYU", "BYO", "PYA", "PYU", "PYO", "RYA", "RYU", "RYO"],
+ ["Write the character 'a'", "A", "あ"],
  ["Write the character 'i'", "I", "い"],
  ["Write the character 'u'", "U", "う"],
  ["Write the character 'e'", "E", "え"],
@@ -101,7 +102,4 @@
  ["Write the missing character in order\n to write the word 'pyo':\n _よ", "PI", "ぴ"],
  ["Write the missing character in order\n to write the word 'rya':\n り_", "YA", "や"],
  ["Write the missing character in order\n to write the word 'ryu':\n り_", "YU", "ゆ"],
- ["Write the missing character in order\n to write the word 'ryo':\n り_", "YO", "よ"],
- ["Write the missing character in order\n to write the word 'ja':\n ぢ_", "YA", "や"],
- ["Write the missing character in order\n to write the word 'ju':\n ぢ_", "YU", "ゆ"],
- ["Write the missing character in order\n to write the word 'jo':\n ぢ_", "YO", "よ"]]
+ ["Write the missing character in order\n to write the word 'ryo':\n り_", "YO", "よ"]]

@@ -189,13 +189,12 @@ class PriorToQuestionsScreen(Screen):
 
     # Displays the help popup. Will be changed with lesson implementation.
     def displayPopup(self):
-        lessonNum = str(uiLogic.getCurrentLessonNum())
         charList = uiLogic.getImgList()
         layout_popup = GridLayout(cols=1, spacing=10, size_hint_y=None, padding=[120,0,0,0])
         layout_popup.bind(minimum_height=layout_popup.setter('height'))
-        path = "Images/hiraganaLessonImgs/Lesson" + lessonNum
+        path = "Images/hiraganaLessonImgs/"
         for char in charList:
-            img1 = Image(source=path + "/so" + char + ".png", size_hint=(None, None), size=(128, 128))
+            img1 = Image(source=path + "so" + char + ".png", size_hint=(None, None), size=(128, 128))
             layout_popup.add_widget(img1)
 
         root = ScrollView(size_hint=(None, None), size=(375,425))
