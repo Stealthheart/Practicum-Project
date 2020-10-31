@@ -1,4 +1,5 @@
-[["Write the kanji for 'いち'", "306C", "一"],
+[["ICHI", "NI", "SAN", "YON", "GO", "ROKU", "NANA", "HACHI", "KYUU", "JYUU", "HYAKU", "SEN", "MAN", "EN"],
+ ["Write the kanji for 'いち'", "306C", "一"],
  ["Write the kanji for 'に'", "4673", "二"],
  ["Write the kanji for 'さん'", "3B30", "三"],
  ["Write the kanji for 'よん'", "3B4D", "四"],

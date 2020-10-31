@@ -14,13 +14,8 @@ currLang = -1
 currQuestionNum = 1
 correctQuestions = 0
 totalQuestionNum = 10
-questionArray = ["Write down the character for: 'a'", "Write down the character for: 'i'",
-                 "Write down the character for: 'u'",
-                 "Write down the character for: 'e'", "Write down the character for: 'o'",
-                 "Write down the character for: 'ka'",
-                 "Write down the character for: 'ki'", "Write down the character for: 'ku'",
-                 "Write down the character for: 'ke'",
-                 "Write down the character for: 'ko'"]
+questionArray = []
+currQuestion = []
 correctAnswer = 0
 
 #region Lesson Methods
@@ -82,7 +77,9 @@ def resetQuestionCounters():
 
 # Returns the next question string.
 def getNextQuestion():
-    return questionArray[currQuestionNum - 1][0]
+    global currQuestion
+    currQuestion = questionArray.pop(randrange(0, len(questionArray)))
+    return currQuestion[0]
 
 # Returns the question we are currently on.
 def getCurrQuestionCount():
@@ -102,7 +99,7 @@ def getTotalQuestionCount():
     return totalQuestionNum
 
 def getCorrectAnswer():
-    return questionArray[currQuestionNum - 2][2]
+    return currQuestion[2]
 
 #endregion Question Methods
 

@@ -1,4 +1,5 @@
-[["Write the character 'ra'", "RA", "ラ"],
+[["RA", "RI", "RU", "RE", "RO", "WA", "WO", "N"],
+ ["Write the character 'ra'", "RA", "ラ"],
  ["Write the character 'ri'", "RI", "リ"],
  ["Write the character 'ru'", "RU", "ル"],
  ["Write the character 're'", "RE", "レ"],

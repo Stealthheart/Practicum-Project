@@ -1,4 +1,5 @@
-[["Write the character 'na'", "NA", "ナ"],
+[["NA", "NI", "NU", "NE", "NO", "HA", "HI", "FU", "HE", "HO"],
+ ["Write the character 'na'", "NA", "ナ"],
  ["Write the character 'ni'", "NI", "ニ"],
  ["Write the character 'nu'", "NU", "ヌ"],
  ["Write the character 'ne'", "NE", "ネ"],

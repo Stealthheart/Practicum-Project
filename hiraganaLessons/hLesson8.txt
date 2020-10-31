@@ -1,4 +1,4 @@
-[["YA", "YU", "YO", "RA", "RI", "RU", "RE", "RO", "WA", "WO", "N"]
+[["YA", "YU", "YO", "RA", "RI", "RU", "RE", "RO", "WA", "WO", "N"],
  ["Write the missing character:\n よ ゆ", "YA", "や"],
  ["Write the missing character:\n や よ", "YU", "ゆ"],
  ["Write the missing character:\n ゆ や", "YO", "よ"],

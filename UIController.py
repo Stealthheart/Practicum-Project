@@ -86,3 +86,10 @@ def removeImgList():
 
 def getImgList():
     return lLogic.getImagePaths()
+
+def getLanguageSize():
+    sizeList = [120, 128]
+    if(getSelectedLanguageName() == "Kanji"):
+        sizeList[0] = 60
+        sizeList[1] = 256
+    return sizeList

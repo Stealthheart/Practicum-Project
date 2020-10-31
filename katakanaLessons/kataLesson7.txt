@@ -1,4 +1,5 @@
-[["Write the missing character:\n ネ ニ ノ ヌ", "NA", "ナ"],
+[["NA", "NI", "NU", "NE", "NO", "HA", "HI", "FU", "HE", "HO", "MA", "MI", "MU", "ME", "MO"],
+ ["Write the missing character:\n ネ ニ ノ ヌ", "NA", "ナ"],
  ["Write the missing character:\n ナ ノ ヌ ネ", "NI", "ニ"],
  ["Write the missing character:\n ノ ネ ナ ニ", "NU", "ヌ"],
  ["Write the missing character:\n ニ ナ ヌ ノ", "NE", "ネ"],
