@@ -17,6 +17,10 @@ def setAttr(screen):
     screen.ids.lessonText.text = getSelectedLanguageName()
     screen.ids.lessonNum.text = "Lesson " + str(getCurrentLessonNum())
     screen.ids.lessonTitle.text = getCurrentLessonTitle()
+<<<<<<< HEAD
+    screen.ids.questionCount.text = str(getTotalQuestionCount()) + " Questions"
+=======
+>>>>>>> Develop
     lLogic.resetQuestionCounters()
 
 # Returns a string depending on if the answer was correct.
@@ -40,6 +44,12 @@ def getNextQuestion(screen):
         return True
 
 #region Helper Methods
+<<<<<<< HEAD
+def getCorrectAnswer():
+    return lLogic.getCorrectAnswer()
+
+=======
+>>>>>>> Develop
 def checkIfMoreLessons():
     return lLogic.areMoreLessons()
 
@@ -75,4 +85,21 @@ def getProfileName(index):
     return pLogic.getProfileName(index)
 
 def generateLessons(lang):
+<<<<<<< HEAD
     return lLogic.generateLessons(lang)
+
+def removeImgList():
+    lLogic.deleteImgList()
+
+def getImgList():
+    return lLogic.getImagePaths()
+
+def getLanguageSize():
+    sizeList = [120, 128]
+    if getSelectedLanguageName() == "Kanji":
+        sizeList[0] = 60
+        sizeList[1] = 256
+    return sizeList
+=======
+    return lLogic.generateLessons(lang)
+>>>>>>> Develop

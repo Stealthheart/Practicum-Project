@@ -259,7 +259,6 @@
 
 <PriorToQuestionsScreen>
     name: 'priorToQuestions'
-    id: priorPP
     Image:
         source: 'Images/goodLuckImg.png'
         size: 150, 150
@@ -295,6 +294,7 @@
             font_size: 30
             pos_hint: {'center_x': .5, 'center_y': .65}
         Label:
+            id: questionCount
             text: '20 Questions'
             size_hint_y: None
             font_size: 20
@@ -350,9 +350,11 @@
             pos_hint: {'center_x': .9, 'center_y': .95}
         Label:
             id: questionLabel
+            font_name: 'fonts/meiryo.ttf'
             text: 'Example question 1'
-            font_size: 28
-            pos_hint: {'center_x': .5, 'center_y': .8}
+            font_size: 24
+            pos_hint: {'center_x': .5, 'center_y': .83}
+            halign: 'center'
         Label:
             id: correctAns
             text: ''

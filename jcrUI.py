@@ -1,15 +1,19 @@
+import os
+
 from kivy.config import Config
 from kivy.lang import Builder
 from kivy.app import App
+from kivy.uix.button import Button
+from kivy.uix.gridlayout import GridLayout
+from kivy.uix.image import Image
+from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.scrollview import ScrollView
 from kivy.uix.widget import Widget
 from kivy.graphics import Color, Line
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
-from kivy.properties import ListProperty
-from kivy.uix.button import Button
-from kivy.uix.gridlayout import GridLayout
-from kivy.uix.scrollview import ScrollView
+from kivy.properties import ListProperty, DictProperty
 
 # Sets the config first
 Config.set('graphics', 'width', '500')
@@ -17,7 +21,7 @@ Config.set('graphics', 'height', '800')
 Config.set('graphics', 'resizable', False)
 
 # helper file to modularize the code
-import UIController as cont
+import UIController as uiLogic
 
 # loads kv file to control the design of the us
 with open("uiDesignMain.kv", encoding='utf-8') as f:
@@ -35,7 +39,6 @@ class StartScreen(Screen):
         changeScreen(self, 'profiles')
 
     pass
-
 
 # Lists the courses (Hira, Kata, Kanji)
 class CourseScreen(Screen):
@@ -56,7 +59,6 @@ class CourseScreen(Screen):
         changeScreen(self, 'start')
 
     pass
-
 
 '''
     This screen holds the profile creation, selection, and deletion. Not yet fully implemented.
@@ -82,11 +84,9 @@ class ProfileScreen(Screen):
 
     pass
 
-
 # Main screen manager to handle control of the different screens
 class MyScreenManager(ScreenManager):
     pass
-
 
 '''
     Hiragana Lesson Screen. This screen will display the hiragana lesson list when loaded in. It will also
@@ -105,9 +105,9 @@ class HiraganaLessonScreen(Screen):
 
     # Loads the selected lesson
     def setLesson(self, args):
-        cont.setCurrLesson(args.lessonNum, 0)
-        print(args.lessonNum)
-        changeScreen(self, 'priorToQuestions')
+        uiLogic.setCurrLesson(args.lessonNum, 0)
+        print("Hi " + args.lessonNum)
+        self.manager.current = "priorToQuestions"
 
     # Loads the course screen UI
     def backToCourse(self):
@@ -125,7 +125,7 @@ class KatakanaLessonScreen(Screen):
         super(KatakanaLessonScreen, self).__init__(**kwargs)
         self.flag = 0
 
-    # Generates the lesson list prior to entering the screen. Only will run once.
+    #Generates the lesson list prior to entering the screen. Only will run once.
     def on_pre_enter(self):
         if self.flag == 0:
             generateLessonList(self, 1)
@@ -133,9 +133,9 @@ class KatakanaLessonScreen(Screen):
 
     # Loads the selected lesson
     def setLesson(self, args):
-        cont.setCurrLesson(args.lessonNum, 1)
+        uiLogic.setCurrLesson(args.lessonNum, 1)
         print(args.lessonNum)
-        changeScreen(self, 'priorToQuestions')
+        self.manager.current = "priorToQuestions"
 
     # Loads the course screen UI
     def backToCourse(self):
@@ -162,9 +162,9 @@ class KanjiLessonScreen(Screen):
 
     # Loads the selected lesson
     def setLesson(self, args):
-        cont.setCurrLesson(args.lessonNum, 2)
+        uiLogic.setCurrLesson(args.lessonNum, 2)
         print(args.lessonNum)
-        changeScreen(self, 'priorToQuestions')
+        self.manager.current = "priorToQuestions"
 
     # Loads the course screen UI
     def backToCourse(self):
@@ -185,27 +185,48 @@ class PriorToQuestionsScreen(Screen):
 
     # Sets the information of the screen to the appropriate lesson info prior to entering
     def on_pre_enter(self, *args):
-        cont.setAttr(self)
+        uiLogic.setAttr(self)
 
-    # Displays the help popup. Will be changed with lesson implementation.
+
+    '''
+        Method to build and display the help popup when the button is clicked. It will dynamically load the
+        appropriate images depending on the language selected. It will also change the size and padding depending
+        on the language, since Kanji are more detailed than Hiragana and Katakana.
+    '''
     def displayPopup(self):
-        popup = Popup(title='Characters To Know',
-                      content=Label(font_name="fonts/meiryo.ttf",
-                                    text="a: あ      ka: か\n"
-                                         "i: い      ki: き\n"
-                                         "u: う      ku: く\n"
-                                         "e: え      ke: け\n"
-                                         "o: お      ko: こ\n"),
-                      size_hint=(None, None),
-                      size=(400, 400))
+        # Loads the imgs from the lesson array
+        charList = uiLogic.getImgList()
+
+        # Checks what size the padding and images should be.
+        imgSize = uiLogic.getLanguageSize()
+
+        #Creates a grid layout to display the images
+        layout_popup = GridLayout(cols=1, spacing=10, size_hint_y=None, padding=[imgSize[0],0,0,0])
+        layout_popup.bind(minimum_height=layout_popup.setter('height'))
+
+        # Creates the path for the appropriate images.
+        path = "Images/" + uiLogic.getCurrLessonScreen() + "Imgs/"
+
+        # Loops through each character in charList and loads the image with the matching name, then adds to the layout
+        for char in charList:
+            img1 = Image(source=path + "so" + char + ".png", size_hint=(None, None), size=(imgSize[1], imgSize[1]))
+            layout_popup.add_widget(img1)
+
+        # Creates a scroll view to allow scrolling of the images.
+        root = ScrollView(size_hint=(None, None), size=(375,425))
+        root.add_widget(layout_popup)
+
+        # Creates the popup with the title and context, then displays the popup.
+        popup = Popup(title='Characters To Know', content=root, size=(400,500), size_hint=(None, None))
         popup.open()
 
     # Loads the lesson list we came from if button is pressed
     def loadOriginalLessonList(self):
-        changeScreen(self, cont.getCurrLessonScreen())
+        self.manager.current = uiLogic.getCurrLessonScreen()
 
     # Loads the question UI screen
     def startLesson(self):
+        uiLogic.removeImgList()
         changeScreen(self, 'question')
 
     # Loads the main menu UI screen
@@ -227,7 +248,7 @@ class QuestionScreen(Screen):
 
     # Loads the question information prior to entering. Also disables the next question button.
     def on_pre_enter(self):
-        cont.getNextQuestion(self)
+        uiLogic.getNextQuestion(self)
         self.ids.nextQBtn.disabled = True
 
     # Submits the drawing for checking against the AI.
@@ -246,7 +267,7 @@ class QuestionScreen(Screen):
 
     # Will send the answer to the logic to determine if it is correct.
     def getAnswerResult(self):
-        return cont.isAnswerCorrect()
+        return uiLogic.isAnswerCorrect()
 
     # This will retrieve the answer the AI determines
     def getUserAnswer(self):
@@ -254,13 +275,13 @@ class QuestionScreen(Screen):
 
     # This will retrieve the correct answer stored in the question
     def getCorrectAnswer(self):
-        return "あ"
+        return uiLogic.getCorrectAnswer()
 
     # Retrieves the next question. Will display the results screen if no more remain.
     def getNextQuestion(self):
-        lessContinues = cont.getNextQuestion(self)
+        lessContinues = uiLogic.getNextQuestion(self)
         if not lessContinues:
-            changeScreen(self, 'results')
+            self.manager.current = 'results'
 
     # Resets the question screen to initial state if lesson is left or user is ready for the next question
     def resetQuestionScreen(self):
@@ -296,22 +317,22 @@ class ResultsScreen(Screen):
         self.displayPerformance()
 
         # disables next lesson button if there are no more lessons after the one completed.
-        if not cont.checkIfMoreLessons():
+        if not uiLogic.checkIfMoreLessons():
             self.ids.resNextLessonBtn.disabled = True
 
     # Displays information regarding to the lesson and question counts.
     def showQuestionInfo(self):
         # Stores correct information to display in the relevant fields.
-        self.ids.resCurrLessonLang.text = cont.getSelectedLanguageName()
-        self.ids.resCurrLessonNum.text = "Lesson " + str(cont.getCurrentLessonNum())
-        self.ids.resCurrLessonTitle.text = cont.getCurrentLessonTitle()
-        self.ids.resTotalCorrect.text = str(cont.getCorrectQuestionCount()) + "/" + \
-                                        str(cont.getTotalQuestionCount()) + " correct"
+        self.ids.resCurrLessonLang.text = uiLogic.getSelectedLanguageName()
+        self.ids.resCurrLessonNum.text = "Lesson " + str(uiLogic.getCurrentLessonNum())
+        self.ids.resCurrLessonTitle.text = uiLogic.getCurrentLessonTitle()
+        self.ids.resTotalCorrect.text = str(uiLogic.getCorrectQuestionCount()) + "/" + \
+                                        str(uiLogic.getTotalQuestionCount()) + " correct"
 
     # Displays accuracy and info text detailing if the next lesson has been unlocked.
     def displayPerformance(self):
         # Stores percentage value for repeated use.
-        percentage = 100 * (float(cont.getCorrectQuestionCount()) / float(cont.getTotalQuestionCount()))
+        percentage = 100 * (float(uiLogic.getCorrectQuestionCount()) / float(uiLogic.getTotalQuestionCount()))
         self.ids.resAccuracy.text = "Accuracy: " + str(percentage) + "%"
 
         # Displays a different message depending on if you passed the lesson or not.
@@ -322,12 +343,12 @@ class ResultsScreen(Screen):
 
     # Loads the next lesson immediately
     def loadNextLesson(self):
-        cont.setupNextLessonInfo()
+        uiLogic.setupNextLessonInfo()
         changeScreen(self, 'priorToQuestions')
 
     # Loads the lesson list of the language selected.
     def loadLessonList(self):
-        changeScreen(self, cont.getCurrLessonScreen())
+        changeScreen(self, uiLogic.getCurrLessonScreen())
 
     # Loads the start screen of the app
     def backToMain(self):
@@ -352,7 +373,7 @@ class MyPaintWidget(Widget):
     def submitAnswer(self):
         self.export_to_png("image.jpg")
         image = open('image.jpg')
-        cont.sendAnswer(image)
+        uiLogic.sendAnswer(image)
 
     # Captures the x and y coordinates when the user clicks or presses down on the drawing canvas
     def on_touch_down(self, touch):
@@ -360,6 +381,7 @@ class MyPaintWidget(Widget):
 
         # Determines if thr coordinates are within the canvas.
         if checkWithinCanvas(touch.x, touch.y):
+
             # If so, the line is allowed to be drawn
             with self.canvas:
                 Color(*self.col)
@@ -376,7 +398,6 @@ class MyPaintWidget(Widget):
     def clearCanvas(self):
         self.canvas.clear()
 
-
 '''
     Helper method for the drawing UI. Checks if the current coordinates being drawn are within the bounds for the
     drawing UI. The canvas begins at x = 25, and extends to x = 475. The y-coordinates begin at 225, and extends to
@@ -386,7 +407,6 @@ def checkWithinCanvas(x, y):
     if 25 < x < 475 and 225 < y < 600:
         return True
 
-
 '''
     This method will generate the lesson lists given the screen and the language type.
     Lang: 0 = Hiragana, 1 = Katakana, 2 = Kanji.
@@ -394,7 +414,7 @@ def checkWithinCanvas(x, y):
 '''
 def generateLessonList(screen, lang):
     # Gets the lesson array
-    lessonArr = cont.generateLessons(lang)
+    lessonArr = uiLogic.generateLessons(lang)
 
     # Creates a new layout for the lessons.
     layout = GridLayout(cols=1, spacing=15, size_hint_y=None, padding=[100, 0, 0, 0])
@@ -429,14 +449,14 @@ def generateProfileList(screen):
     layout.bind(minimum_height=layout.setter('height'))
 
     # Loops through the entire profile list
-    for i in range(cont.getProfileNameLength()):
+    for i in range(uiLogic.getProfileNameLength()):
         # Creates new button for each element, naming and id'ing them appropriately.
-        button = Button(text=cont.getProfileName(i),
+        button = Button(text=uiLogic.getProfileName(i),
                         size_hint=(None, None),
                         border=(20, 20, 20, 20),
                         size=(150, 40))
         button.bind(on_press=screen.selectProfile)
-        button.profName = cont.getProfileName(i)
+        button.profName = uiLogic.getProfileName(i)
         layout.add_widget(button)
 
     # Creates a scrollable layout to hold the lessons.
