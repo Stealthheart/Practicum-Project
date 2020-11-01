@@ -187,19 +187,36 @@ class PriorToQuestionsScreen(Screen):
     def on_pre_enter(self, *args):
         uiLogic.setAttr(self)
 
-    # Displays the help popup. Will be changed with lesson implementation.
+
+    '''
+        Method to build and display the help popup when the button is clicked. It will dynamically load the
+        appropriate images depending on the language selected. It will also change the size and padding depending
+        on the language, since Kanji are more detailed than Hiragana and Katakana.
+    '''
     def displayPopup(self):
+        # Loads the imgs from the lesson array
         charList = uiLogic.getImgList()
+
+        # Checks what size the padding and images should be.
         imgSize = uiLogic.getLanguageSize()
+
+        #Creates a grid layout to display the images
         layout_popup = GridLayout(cols=1, spacing=10, size_hint_y=None, padding=[imgSize[0],0,0,0])
         layout_popup.bind(minimum_height=layout_popup.setter('height'))
+
+        # Creates the path for the appropriate images.
         path = "Images/" + uiLogic.getCurrLessonScreen() + "Imgs/"
+
+        # Loops through each character in charList and loads the image with the matching name, then adds to the layout
         for char in charList:
             img1 = Image(source=path + "so" + char + ".png", size_hint=(None, None), size=(imgSize[1], imgSize[1]))
             layout_popup.add_widget(img1)
 
+        # Creates a scroll view to allow scrolling of the images.
         root = ScrollView(size_hint=(None, None), size=(375,425))
         root.add_widget(layout_popup)
+
+        # Creates the popup with the title and context, then displays the popup.
         popup = Popup(title='Characters To Know', content=root, size=(400,500), size_hint=(None, None))
         popup.open()
 
@@ -294,8 +311,7 @@ class ResultsScreen(Screen):
     def __init__(self, **kwargs):
         super(ResultsScreen, self).__init__(**kwargs)
 
-        # Loads all relevant information prior to entering the screen.
-
+    # Loads all relevant information prior to entering the screen.
     def on_pre_enter(self, *args):
         self.showQuestionInfo()
         self.displayPerformance()
@@ -304,8 +320,7 @@ class ResultsScreen(Screen):
         if not uiLogic.checkIfMoreLessons():
             self.ids.resNextLessonBtn.disabled = True
 
-        # Displays information regarding to the lesson and question counts.
-
+    # Displays information regarding to the lesson and question counts.
     def showQuestionInfo(self):
         # Stores correct information to display in the relevant fields.
         self.ids.resCurrLessonLang.text = uiLogic.getSelectedLanguageName()
@@ -314,8 +329,7 @@ class ResultsScreen(Screen):
         self.ids.resTotalCorrect.text = str(uiLogic.getCorrectQuestionCount()) + "/" + \
                                         str(uiLogic.getTotalQuestionCount()) + " correct"
 
-        # Displays accuracy and info text detailing if the next lesson has been unlocked.
-
+    # Displays accuracy and info text detailing if the next lesson has been unlocked.
     def displayPerformance(self):
         # Stores percentage value for repeated use.
         percentage = 100 * (float(uiLogic.getCorrectQuestionCount()) / float(uiLogic.getTotalQuestionCount()))
@@ -327,19 +341,16 @@ class ResultsScreen(Screen):
         else:
             self.ids.resLessonUnlockLbl.text = "Try again for 80% to unlock the next lesson."
 
-        # Loads the next lesson immediately
-
+    # Loads the next lesson immediately
     def loadNextLesson(self):
         uiLogic.setupNextLessonInfo()
         changeScreen(self, 'priorToQuestions')
 
-        # Loads the lesson list of the language selected.
-
+    # Loads the lesson list of the language selected.
     def loadLessonList(self):
         changeScreen(self, uiLogic.getCurrLessonScreen())
 
-        # Loads the start screen of the app
-
+    # Loads the start screen of the app
     def backToMain(self):
         changeScreen(self, 'start')
 

@@ -1,4 +1,5 @@
-[["Write the missing kanji for 'Monday': \n_曜日", "376E", "月"],
+[["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY", "12", "16", "24", "79", "201", "245", "300", "400", "600", "800"],
+ ["Write the missing kanji for 'Monday': \n_曜日", "376E", "月"],
  ["Write the missing kanji for 'Tuesday': \n_曜日", "3250", "火"],
  ["Write the missing kanji for 'Wednesday': \n_曜日", "3F65", "水"],
  ["Write the missing kanji for 'Thursday': \n_曜日", "4C5A", "木"],
