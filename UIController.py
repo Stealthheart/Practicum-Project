@@ -1,5 +1,6 @@
 import lessonLogic as lLogic
 import profileLogic as pLogic
+import sqlite3
 
 # Returns a string resembling the screen to swap
 def getCurrLessonScreen():
@@ -93,5 +94,42 @@ def getLanguageSize():
         sizeList[0] = 60
         sizeList[1] = 256
     return sizeList
+
+
+# noinspection SqlNoDataSourceInspection
+def createDB():
+    conn = sqlite3.connect('Database/test.db')
+    print("Opened database successfully!")
+    conn.execute('CREATE TABLE Profiles\n'
+                 '        (ID INT PRIMARY KEY NOT NULL,\n'
+                 '        NAME TEXT NOT NULL,\n'
+                 '        HIRAGANA_LESSONS_COMPLETED INT NOT NULL,\n'
+                 '        KATAKANA_LESSONS_COMPLETED INT NOT NULL,\n'
+                 '        KANJI_LESSONS_COMPLETED INT NOT NULL);')
+    print("Table created successfully!")
+    conn.close()
+
+# noinspection SqlNoDataSourceInspection
+def testDB():
+    conn = sqlite3.connect('Database/test.db')
+
+    cursor = conn.execute("SELECT * FROM Profiles")
+    for row in cursor:
+        print("ID = ", row[0])
+        print("NAME = ", row[1])
+        print("HIRAGANA_LESSONS_COMPLETED = ", row[2])
+        print("KATAKANA_LESSONS_COMPLETED = ", row[3])
+        print("KANJI_LESSONS_COMPLETED = ", row[4])
+    print("Selected * Successfully!")
+    conn.close()
+
+def getTotalHiraLessons(profName):
+    return pLogic.getTotalHiraLessons(profName)
+
+def getTotalKataLessons(profName):
+    return pLogic.getTotalKataLessons(profName)
+
+def getTotalKanjiLessons(profName):
+    return pLogic.getTotalKanjiLessons(profName)
 
 

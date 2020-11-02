@@ -1,19 +1,15 @@
-import os
-
 from kivy.config import Config
 from kivy.lang import Builder
 from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.image import Image
-from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.widget import Widget
 from kivy.graphics import Color, Line
-from kivy.uix.label import Label
 from kivy.uix.popup import Popup
-from kivy.properties import ListProperty, DictProperty
+from kivy.properties import ListProperty
 
 # Sets the config first
 Config.set('graphics', 'width', '500')
@@ -31,6 +27,8 @@ with open("uiDesignMain.kv", encoding='utf-8') as f:
 class StartScreen(Screen):
     def __init__(self, **kwargs):
         super(StartScreen, self).__init__(**kwargs)
+        #uiLogic.createDB()
+        uiLogic.testDB()
 
     def loadCourseScreen(self):
         changeScreen(self, 'course')
@@ -76,6 +74,9 @@ class ProfileScreen(Screen):
 
     # Change the selected profile.
     def selectProfile(self, args):
+        self.ids.totalHiraLessons.text = uiLogic.getTotalHiraLessons(args.profName)
+        self.ids.totalKataLessons.text = uiLogic.getTotalKataLessons(args.profName)
+        self.ids.totalKanjiLessons.text = uiLogic.getTotalKanjiLessons(args.profName)
         print(args.profName)
 
     # Loads the main menu screen UI

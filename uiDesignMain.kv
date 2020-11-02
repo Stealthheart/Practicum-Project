@@ -131,6 +131,24 @@
             Line:
                 width: 5
                 rectangle: (25, 285, 200, 295)
+            Line:
+                width: 2
+                rectangle: (50, 40, 400, 230)
+            Line:
+                width: 2
+                points: (300, 40, 300, 270)
+            Line:
+                width: 2
+                points: (150, 40, 150, 270)
+            Line:
+                width: 2
+                points: (50, 210, 450, 210)
+            Line:
+                width: 2
+                points: (50, 155, 450, 155)
+            Line:
+                width: 2
+                points: (50, 100, 450, 100)
         Label:
             text: 'Profiles'
             font_size: 36
@@ -148,17 +166,52 @@
             font_size: 18
             pos_hint: {'center_x': .7, 'center_y': .5}
         Label:
-            text: 'Highest Hiragana Lesson Completed: 1'
+            text: 'Hiragana'
             font_size: 18
-            pos_hint: {'center_x': .38, 'center_y': .3}
+            pos_hint: {'center_x': .2, 'center_y': .23}
         Label:
-            text: 'Highest Katakana Lesson Completed: 1'
+            text: 'Katakana'
             font_size: 18
-            pos_hint: {'center_x': .38, 'center_y': .2}
+            pos_hint: {'center_x': .2, 'center_y': .16}
         Label:
-            text: 'Highest Kanji Lesson Completed: 1'
+            text: 'Kanji'
             font_size: 18
-            pos_hint: {'center_x': .35, 'center_y': .1}
+            pos_hint: {'center_x': .2, 'center_y': .09}
+        Label:
+            text: 'Highest'
+            font_size: 18
+            pos_hint: {'center_x': .45, 'center_y': .3}
+        Label:
+            text: 'Total'
+            font_size: 18
+            pos_hint: {'center_x': .75, 'center_y': .3}
+        Label:
+            text: '0'
+            font_size: 18
+            pos_hint: {'center_x': .45, 'center_y': .23}
+        Label:
+            text: '1'
+            font_size: 18
+            pos_hint: {'center_x': .45, 'center_y': .16}
+        Label:
+            text: '2'
+            font_size: 18
+            pos_hint: {'center_x': .45, 'center_y': .09}
+        Label:
+            id: totalHiraLessons
+            text: '3'
+            font_size: 18
+            pos_hint: {'center_x': .75, 'center_y': .23}
+        Label:
+            id: totalKataLessons
+            text: '4'
+            font_size: 18
+            pos_hint: {'center_x': .75, 'center_y': .16}
+        Label:
+            id: totalKanjiLessons
+            text: '5'
+            font_size: 18
+            pos_hint: {'center_x': .75, 'center_y': .09}
         Button:
             text: 'New'
             font_size: 20
