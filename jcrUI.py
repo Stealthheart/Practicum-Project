@@ -29,6 +29,12 @@ class StartScreen(Screen):
         super(StartScreen, self).__init__(**kwargs)
         #uiLogic.createDB()
         uiLogic.testDB()
+        self.flag = 0
+
+    def on_leave(self):
+        if self.flag == 0:
+            self.manager.get_screen('hLessons').generateLessons()
+            self.flag = 1
 
     def loadCourseScreen(self):
         changeScreen(self, 'course')
@@ -68,16 +74,21 @@ class ProfileScreen(Screen):
 
     # Generates the profile list prior to entering
     def on_pre_enter(self, *args):
+        self.manager.get_screen('hLessons').lockLessons()
         if self.flag == 0:
             generateProfileList(self)
             self.flag = 1
 
     # Change the selected profile.
     def selectProfile(self, args):
-        self.ids.totalHiraLessons.text = uiLogic.getTotalHiraLessons(args.profName)
+        uiLogic.setProfileInfo(args.profName)
+        self.ids.currProfile.text = "Welcome, " + args.profName
+        self.ids.totalHiraLessons.text = str(uiLogic.getTotalHiraLessons(args.profName))
         self.ids.totalKataLessons.text = uiLogic.getTotalKataLessons(args.profName)
         self.ids.totalKanjiLessons.text = uiLogic.getTotalKanjiLessons(args.profName)
-        print(args.profName)
+        self.ids.highestHiraLessons.text = str(uiLogic.getHighestHiraLessons(args.profName))
+        self.ids.highestKataLessons.text = uiLogic.getHighestKataLessons(args.profName)
+        self.ids.highestKanjiLessons.text = uiLogic.getHighestKanjiLessons(args.profName)
 
     # Loads the main menu screen UI
     def backToStart(self):
@@ -96,19 +107,25 @@ class MyScreenManager(ScreenManager):
 class HiraganaLessonScreen(Screen):
     def __init__(self, **kwargs):
         super(HiraganaLessonScreen, self).__init__(**kwargs)
-        self.flag = 0
 
     # Generates the lesson list prior to entering the screen. Only will run once.
     def on_pre_enter(self):
-        if self.flag == 0:
-            generateLessonList(self, 0)
-            self.flag = 1
+        for x in range(uiLogic.getProfileInfo(4) + 1, 0, -1):
+            self.children[0].children[0].children[14 - x].disabled = False
+
+    def generateLessons(self):
+        generateLessonList(self, 0)
 
     # Loads the selected lesson
     def setLesson(self, args):
         uiLogic.setCurrLesson(args.lessonNum, 0)
         print("Hi " + args.lessonNum)
         self.manager.current = "priorToQuestions"
+
+    def lockLessons(self):
+        print("Locking...")
+        for x in range(len(self.children[0].children[0].children)):
+            self.children[0].children[0].children[x].disabled = True
 
     # Loads the course screen UI
     def backToCourse(self):
@@ -316,9 +333,13 @@ class ResultsScreen(Screen):
     def on_pre_enter(self, *args):
         self.showQuestionInfo()
         self.displayPerformance()
+        uiLogic.checkPerformance()
+        uiLogic.saveInformation()
 
         # disables next lesson button if there are no more lessons after the one completed.
         if not uiLogic.checkIfMoreLessons():
+            self.ids.resNextLessonBtn.disabled = True
+        if uiLogic.getCurrentLessonNum() > uiLogic.getProfileInfo(uiLogic.getLangNum() + 4):
             self.ids.resNextLessonBtn.disabled = True
 
     # Displays information regarding to the lesson and question counts.
@@ -341,6 +362,7 @@ class ResultsScreen(Screen):
             self.ids.resLessonUnlockLbl.text = "You have unlocked the next lesson!"
         else:
             self.ids.resLessonUnlockLbl.text = "Try again for 80% to unlock the next lesson."
+            self.ids.resNextLessonBtn.disabled = True
 
     # Loads the next lesson immediately
     def loadNextLesson(self):
@@ -427,7 +449,8 @@ def generateLessonList(screen, lang):
         button = Button(text='Lesson ' + str(i + 1) + ": " + lessonArr[i],
                         size_hint=(None, None),
                         border=(20, 20, 20, 20),
-                        size=(300, 60))
+                        size=(300, 60),
+                        disabled=True)
         button.bind(on_press=screen.setLesson)
         button.lessonNum = str(i + 1)
         layout.add_widget(button)

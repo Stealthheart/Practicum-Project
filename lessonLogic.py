@@ -1,4 +1,5 @@
 import uiFileIOLibrary as io
+import database as db
 from random import randrange
 
 '''
@@ -115,7 +116,7 @@ def checkAnswer(img):
     num = randrange(2)
     if num == 0:
         correctAnswer = 0
-        correctQuestions += 1
+        correctQuestions += 5
     else:
         correctAnswer = 1
 
@@ -137,3 +138,12 @@ def deleteImgList():
 
 def getImagePaths():
     return questionArray[0]
+
+def unlockedNextLesson():
+    if 100 * (float(getCorrectQuestionCount()) / float(getTotalQuestionCount())) >= 80:
+        print(100 * (float(getCorrectQuestionCount()) / float(getTotalQuestionCount())))
+        return True
+    return False
+
+def getLangNumber():
+    return currLang

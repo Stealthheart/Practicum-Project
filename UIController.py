@@ -101,17 +101,26 @@ def createDB():
     conn = sqlite3.connect('Database/test.db')
     print("Opened database successfully!")
     conn.execute('CREATE TABLE Profiles\n'
-                 '        (ID INT PRIMARY KEY NOT NULL,\n'
-                 '        NAME TEXT NOT NULL,\n'
-                 '        HIRAGANA_LESSONS_COMPLETED INT NOT NULL,\n'
-                 '        KATAKANA_LESSONS_COMPLETED INT NOT NULL,\n'
-                 '        KANJI_LESSONS_COMPLETED INT NOT NULL);')
+                 '        (id INTEGER PRIMARY KEY,\n'
+                 '        name TEXT NOT NULL,\n'
+                 '        hiragana_lessons_completed INT NOT NULL,\n'
+                 '        katakana_lessons_completed INT NOT NULL,\n'
+                 '        kanji_lessons_completed INT NOT NULL,\n'
+                 '        highest_hiragana_lesson_completed INT NOT NULL,\n'
+                 '        highest_katakana_lesson_completed INT NOT NULL,\n'
+                 '        highest_kanji_lesson_completed INT NOT NULL);')
     print("Table created successfully!")
     conn.close()
 
 # noinspection SqlNoDataSourceInspection
 def testDB():
     conn = sqlite3.connect('Database/test.db')
+    '''conn.execute('INSERT INTO Profiles(name, hiragana_lessons_completed, katakana_lessons_completed, kanji_lessons_completed,'
+                 'highest_hiragana_lesson_completed, highest_katakana_lesson_completed, highest_kanji_lesson_completed) VALUES ("Auto", 12, 21, 30, 9, 1, 1)')
+    conn.execute(
+        'INSERT INTO Profiles(name, hiragana_lessons_completed, katakana_lessons_completed, kanji_lessons_completed,'
+                 'highest_hiragana_lesson_completed, highest_katakana_lesson_completed, highest_kanji_lesson_completed) VALUES ("Bots", 51, 25, 12, 5, 1, 1)')
+    conn.commit()'''
 
     cursor = conn.execute("SELECT * FROM Profiles")
     for row in cursor:
@@ -131,5 +140,31 @@ def getTotalKataLessons(profName):
 
 def getTotalKanjiLessons(profName):
     return pLogic.getTotalKanjiLessons(profName)
+
+def getHighestKanjiLessons(profName):
+    return pLogic.getHighestKanjiLessons(profName)
+
+def getHighestKataLessons(profName):
+    return pLogic.getHighestKataLessons(profName)
+
+def getHighestHiraLessons(profName):
+    return pLogic.getHighestHiraLessons(profName)
+
+def setProfileInfo(profName):
+    pLogic.setProfileInfo(profName)
+
+def checkPerformance():
+    if lLogic.unlockedNextLesson() and lLogic.getCurrentLessonNum() == pLogic.getProfileInfo(4):
+        pLogic.incrementHighestLesson(lLogic.getSelectedLanguage())
+    pLogic.incrementTotalLessons(lLogic.getLangNumber())
+
+def getLangNum():
+    return lLogic.getLangNumber()
+
+def getProfileInfo(index):
+    return pLogic.getProfileInfo(index)
+
+def saveInformation():
+    pLogic.writeToDB()
 
 
