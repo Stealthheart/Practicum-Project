@@ -108,7 +108,8 @@ def createDB():
                  '        kanji_lessons_completed INT NOT NULL,\n'
                  '        highest_hiragana_lesson_completed INT NOT NULL,\n'
                  '        highest_katakana_lesson_completed INT NOT NULL,\n'
-                 '        highest_kanji_lesson_completed INT NOT NULL);')
+                 '        highest_kanji_lesson_completed INT NOT NULL,\n'
+                 '        last INT NOT NULL);')
     print("Table created successfully!")
     conn.close()
 
@@ -129,6 +130,10 @@ def testDB():
         print("HIRAGANA_LESSONS_COMPLETED = ", row[2])
         print("KATAKANA_LESSONS_COMPLETED = ", row[3])
         print("KANJI_LESSONS_COMPLETED = ", row[4])
+        print("Highest_Hira_LESSONS_COMPLETED = ", row[5])
+        print("Highest_Kata_LESSONS_COMPLETED = ", row[6])
+        print("Highest_Kanji_LESSONS_COMPLETED = ", row[7])
+        print("Last = ", row[8])
     print("Selected * Successfully!")
     conn.close()
 
@@ -154,7 +159,7 @@ def setProfileInfo(profName):
     pLogic.setProfileInfo(profName)
 
 def checkPerformance():
-    if lLogic.unlockedNextLesson() and lLogic.getCurrentLessonNum() == pLogic.getProfileInfo(4):
+    if lLogic.unlockedNextLesson() and lLogic.getCurrentLessonNum() == pLogic.getProfileInfo(lLogic.getLangNumber() + 4):
         pLogic.incrementHighestLesson(lLogic.getSelectedLanguage())
     pLogic.incrementTotalLessons(lLogic.getLangNumber())
 
@@ -167,4 +172,12 @@ def getProfileInfo(index):
 def saveInformation():
     pLogic.writeToDB()
 
+def createNewProfile(name):
+    if pLogic.canCreateProfile(name):
+        pLogic.createNewProfile(name)
+        return True
+    return False
+
+def setProfileInfoOnStartup():
+    pLogic.startUpProfileSet()
 

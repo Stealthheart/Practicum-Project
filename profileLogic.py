@@ -18,19 +18,19 @@ def getTotalHiraLessons(profName):
     return db.getTotalHiraLessons(profName)[0]
 
 def getTotalKataLessons(profName):
-    return str(db.getTotalKataLessons(profName)[0])
+    return db.getTotalKataLessons(profName)[0]
 
 def getTotalKanjiLessons(profName):
-    return str(db.getTotalKanjiLessons(profName)[0])
+    return db.getTotalKanjiLessons(profName)[0]
 
 def getHighestHiraLessons(profName):
     return db.getHighestHiraLessons(profName)[0]
 
 def getHighestKataLessons(profName):
-    return str(db.getHighestKataLessons(profName)[0])
+    return db.getHighestKataLessons(profName)[0]
 
 def getHighestKanjiLessons(profName):
-    return str(db.getHighestKanjiLessons(profName)[0])
+    return db.getHighestKanjiLessons(profName)[0]
 
 def setProfileInfo(profName):
     global currProfInfo
@@ -42,6 +42,8 @@ def setProfileInfo(profName):
     currProfInfo.append(getHighestHiraLessons(profName))
     currProfInfo.append(getHighestKataLessons(profName))
     currProfInfo.append(getHighestKanjiLessons(profName))
+    currProfInfo.append(1)
+    writeToDB()
 
 def getCurrProfileName():
     return currProfInfo[0]
@@ -54,8 +56,6 @@ def incrementHighestLesson(lang):
     else:
         currProfInfo[6] += 1
 
-    print("This is highest lesson completed now = ", currProfInfo[4])
-
 def getProfileInfo(index):
     return currProfInfo[index]
 
@@ -64,4 +64,17 @@ def writeToDB():
 
 def incrementTotalLessons(lang):
     currProfInfo[lang + 1] += 1
+
+def canCreateProfile(profName):
+    if db.checkIfProfileExists(profName) == 0:
+        print("Hello??")
+        return True
+    return False
+
+def createNewProfile(profName):
+    db.createProfile(profName)
+
+def startUpProfileSet():
+    profName = db.getLastUsedProfile()
+    setProfileInfo(profName)
 

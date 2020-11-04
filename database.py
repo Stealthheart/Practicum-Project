@@ -49,14 +49,43 @@ def getHighestKanjiLessons(profName):
     return cursor.fetchone()
 
 def updateProfile(infoList):
+    print("hello?????")
     conn = sql.connect('Database/test.db')
     query = 'UPDATE Profiles SET hiragana_lessons_completed = ?,' \
             '                    katakana_lessons_completed = ?,' \
             '                    kanji_lessons_completed = ?,' \
             '                    highest_hiragana_lesson_completed = ?,' \
             '                    highest_katakana_lesson_completed = ?,' \
-            '                    highest_kanji_lesson_completed = ? ' \
+            '                    highest_kanji_lesson_completed = ?,' \
+            '                    last = ? ' \
             '               WHERE name = ?'
-    conn.execute(query, (infoList[1], infoList[2], infoList[3], infoList[4], infoList[5], infoList[6], infoList[0],))
+    conn.execute(query, (infoList[1], infoList[2], infoList[3], infoList[4], infoList[5], infoList[6], infoList[7], infoList[0]))
     conn.commit()
     conn.close()
+
+def checkIfProfileExists(profName):
+    conn = sql.connect('Database/test.db')
+    query = 'SELECT COUNT(*) FROM Profiles WHERE NAME = ?'
+    cursor = conn.execute(query, (profName,))
+    for row in cursor:
+        return row[0]
+
+def createProfile(profName):
+    conn = sql.connect('Database/test.db')
+    query = 'INSERT INTO Profiles(name, hiragana_lessons_completed, katakana_lessons_completed, kanji_lessons_completed, ' \
+            'highest_hiragana_lesson_completed, highest_katakana_lesson_completed, highest_kanji_lesson_completed, last)' \
+            ' VALUES (?, 0, 0, 0, 0, 0, 0, 0)'
+    conn.execute(query, (profName,))
+    conn.commit()
+
+def getLastUsedProfile():
+    conn = sql.connect('Database/test.db')
+    query = 'SELECT name FROM Profiles WHERE last = 1'
+    cursor = conn.execute(query)
+    for row in cursor:
+        return row[0]
+
+def profileSwapped(profName):
+    conn = sql.connect('Database/test.db')
+    query = 'UPDATE Profiles SET last = 0 WHERE name = ?'
+    conn.execute(query, (profName,))

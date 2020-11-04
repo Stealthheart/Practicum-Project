@@ -4,12 +4,15 @@ from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.image import Image
+from kivy.uix.label import Label
+from kivy.uix.relativelayout import RelativeLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.scrollview import ScrollView
+from kivy.uix.textinput import TextInput
 from kivy.uix.widget import Widget
 from kivy.graphics import Color, Line
 from kivy.uix.popup import Popup
-from kivy.properties import ListProperty
+from kivy.properties import ListProperty, partial, Clock
 
 # Sets the config first
 Config.set('graphics', 'width', '500')
@@ -29,11 +32,20 @@ class StartScreen(Screen):
         super(StartScreen, self).__init__(**kwargs)
         #uiLogic.createDB()
         uiLogic.testDB()
+        uiLogic.setProfileInfoOnStartup()
         self.flag = 0
+
+    def on_enter(self, *args):
+        if len(self.ids) == 0:
+            Clock.schedule_once(self.setName)
+        else:
+            self.setName()
 
     def on_leave(self):
         if self.flag == 0:
             self.manager.get_screen('hLessons').generateLessons()
+            self.manager.get_screen('kataLessons').generateLessons()
+            self.manager.get_screen('kanjiLessons').generateLessons()
             self.flag = 1
 
     def loadCourseScreen(self):
@@ -41,6 +53,9 @@ class StartScreen(Screen):
 
     def loadProfileScreen(self):
         changeScreen(self, 'profiles')
+
+    def setName(self, *args):
+        self.ids.currSelectedProf.text = "Hi, " + uiLogic.getProfileInfo(0)
 
     pass
 
@@ -71,10 +86,14 @@ class ProfileScreen(Screen):
     def __init__(self, **kwargs):
         super(ProfileScreen, self).__init__(**kwargs)
         self.flag = 0
+        self.createProfName = ''
+        self.pop = Popup()
 
     # Generates the profile list prior to entering
     def on_pre_enter(self, *args):
         self.manager.get_screen('hLessons').lockLessons()
+        self.manager.get_screen('kataLessons').lockLessons()
+        self.manager.get_screen('kanjiLessons').lockLessons()
         if self.flag == 0:
             generateProfileList(self)
             self.flag = 1
@@ -84,13 +103,58 @@ class ProfileScreen(Screen):
         uiLogic.setProfileInfo(args.profName)
         self.ids.currProfile.text = "Welcome, " + args.profName
         self.ids.totalHiraLessons.text = str(uiLogic.getTotalHiraLessons(args.profName))
-        self.ids.totalKataLessons.text = uiLogic.getTotalKataLessons(args.profName)
-        self.ids.totalKanjiLessons.text = uiLogic.getTotalKanjiLessons(args.profName)
+        self.ids.totalKataLessons.text = str(uiLogic.getTotalKataLessons(args.profName))
+        self.ids.totalKanjiLessons.text = str(uiLogic.getTotalKanjiLessons(args.profName))
         self.ids.highestHiraLessons.text = str(uiLogic.getHighestHiraLessons(args.profName))
-        self.ids.highestKataLessons.text = uiLogic.getHighestKataLessons(args.profName)
-        self.ids.highestKanjiLessons.text = uiLogic.getHighestKanjiLessons(args.profName)
+        self.ids.highestKataLessons.text = str(uiLogic.getHighestKataLessons(args.profName))
+        self.ids.highestKanjiLessons.text = str(uiLogic.getHighestKanjiLessons(args.profName))
+        self.manager.get_screen('start').ids.currSelectedProf.text = "Hi, " + args.profName
 
-    # Loads the main menu screen UI
+    def createNewProfile(self):
+        print("Let's make a new profile.")
+        layout = RelativeLayout()
+        submitBtn = Button(text='Create',
+                            size_hint = (None, None),
+                            border = (20, 20, 20, 20),
+                            size = (250, 60),
+                            pos_hint = {'center_x':.5, 'center_y': .25})
+        nameLabel = Label(text='Enter Name (Must be unique)',
+                          font_size=15,
+                          pos_hint = {'center_x':.4, 'center_y': .85})
+        textField = TextInput(multiline=False,
+                              size_hint = (None, None),
+                              size=(250, 30),
+                              pos_hint = {'center_x':.5, 'center_y': .65})
+        textField.bind(text=self.saveName)
+        submitBtn.bind(on_release=self.createProfile)
+
+        layout.add_widget(submitBtn)
+        layout.add_widget(nameLabel)
+        layout.add_widget(textField)
+        self.popup = Popup(title='Characters To Know', content=layout, size=(300,200), size_hint=(None, None))
+        self.popup.open()
+
+    def saveName(self, *args):
+        self.createProfName = args[1]
+
+    def createProfile(self, *args):
+        print(self.createProfName)
+        print(self.profList.children)
+        self.popup.dismiss()
+        success = uiLogic.createNewProfile(self.createProfName)
+        if success:
+            self.ids.profileCreationBool.text = "Profile Created Successfully!"
+            button = Button(text=self.createProfName,
+                            size_hint=(None, None),
+                            border=(20, 20, 20, 20),
+                            size=(150, 40))
+            button.bind(on_press=self.selectProfile)
+            button.profName = self.createProfName
+            self.profList.add_widget(button)
+        else:
+            self.ids.profileCreationBool.text = "Error while creating profile."
+
+        # Loads the main menu screen UI
     def backToStart(self):
         changeScreen(self, 'start')
 
@@ -110,8 +174,9 @@ class HiraganaLessonScreen(Screen):
 
     # Generates the lesson list prior to entering the screen. Only will run once.
     def on_pre_enter(self):
+        totalLessons = len(self.children[0].children[0].children)
         for x in range(uiLogic.getProfileInfo(4) + 1, 0, -1):
-            self.children[0].children[0].children[14 - x].disabled = False
+            self.children[0].children[0].children[totalLessons - x].disabled = False
 
     def generateLessons(self):
         generateLessonList(self, 0)
@@ -145,15 +210,23 @@ class KatakanaLessonScreen(Screen):
 
     #Generates the lesson list prior to entering the screen. Only will run once.
     def on_pre_enter(self):
-        if self.flag == 0:
-            generateLessonList(self, 1)
-            self.flag = 1
+        totalLessons = len(self.children[0].children[0].children)
+        for x in range(uiLogic.getProfileInfo(5) + 1, 0, -1):
+            self.children[0].children[0].children[totalLessons - x].disabled = False
+
+    def generateLessons(self):
+        generateLessonList(self, 1)
 
     # Loads the selected lesson
     def setLesson(self, args):
         uiLogic.setCurrLesson(args.lessonNum, 1)
         print(args.lessonNum)
         self.manager.current = "priorToQuestions"
+
+    def lockLessons(self):
+        print("Locking...")
+        for x in range(len(self.children[0].children[0].children)):
+            self.children[0].children[0].children[x].disabled = True
 
     # Loads the course screen UI
     def backToCourse(self):
@@ -174,15 +247,23 @@ class KanjiLessonScreen(Screen):
 
     # Generates the lesson list prior to entering the screen. Only will run once.
     def on_pre_enter(self):
-        if self.flag == 0:
-            generateLessonList(self, 2)
-            self.flag = 1
+        totalLessons = len(self.children[0].children[0].children)
+        for x in range(uiLogic.getProfileInfo(6) + 1, 0, -1):
+            self.children[0].children[0].children[totalLessons - x].disabled = False
+
+    def generateLessons(self):
+        generateLessonList(self, 2)
 
     # Loads the selected lesson
     def setLesson(self, args):
         uiLogic.setCurrLesson(args.lessonNum, 2)
         print(args.lessonNum)
         self.manager.current = "priorToQuestions"
+
+    def lockLessons(self):
+        print("Locking...")
+        for x in range(len(self.children[0].children[0].children)):
+            self.children[0].children[0].children[x].disabled = True
 
     # Loads the course screen UI
     def backToCourse(self):
@@ -471,6 +552,7 @@ def generateProfileList(screen):
     # Creates a new layout for the profiles.
     layout = GridLayout(cols=1, spacing=15, size_hint=(None, None), padding=[100, 0, 0, 0])
     layout.bind(minimum_height=layout.setter('height'))
+    screen.profList = layout
 
     # Loops through the entire profile list
     for i in range(uiLogic.getProfileNameLength()):
