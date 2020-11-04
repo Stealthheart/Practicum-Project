@@ -34,6 +34,9 @@ def getHighestKanjiLessons(profName):
 
 def setProfileInfo(profName):
     global currProfInfo
+    if currProfInfo != []:
+        print("Hello")
+        db.profileSwapped(currProfInfo[0])
     currProfInfo = []
     currProfInfo.append(profName)
     currProfInfo.append(getTotalHiraLessons(profName))
@@ -76,5 +79,7 @@ def createNewProfile(profName):
 
 def startUpProfileSet():
     profName = db.getLastUsedProfile()
+    if profName == '':
+        return
     setProfileInfo(profName)
 

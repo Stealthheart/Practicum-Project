@@ -74,7 +74,7 @@ def createProfile(profName):
     conn = sql.connect('Database/test.db')
     query = 'INSERT INTO Profiles(name, hiragana_lessons_completed, katakana_lessons_completed, kanji_lessons_completed, ' \
             'highest_hiragana_lesson_completed, highest_katakana_lesson_completed, highest_kanji_lesson_completed, last)' \
-            ' VALUES (?, 0, 0, 0, 0, 0, 0, 0)'
+            ' VALUES (?, 0, 0, 0, 0, 0, 0, 0)create table Profiles(	name text,	hiragana_lessons_completed int,	katakana_lessons_completed int,	kanji_lessons_completed int,	highest_hiragana_lesson_completed int,	highest_katakana_lesson_completed int,	highest_kanji_lesson_completed int,	last int);'
     conn.execute(query, (profName,))
     conn.commit()
 
@@ -88,4 +88,21 @@ def getLastUsedProfile():
 def profileSwapped(profName):
     conn = sql.connect('Database/test.db')
     query = 'UPDATE Profiles SET last = 0 WHERE name = ?'
+    print(profName)
     conn.execute(query, (profName,))
+    conn.commit()
+    testDB()
+
+def testDB():
+    conn = sql.connect('Database/test.db')
+    cursor = conn.execute("SELECT * FROM Profiles")
+    for row in cursor:
+        print("ID =", row[0])
+        print("NAME =", row[1])
+        print("HIRAGANA_LESSONS_COMPLETED =", row[2])
+        print("KATAKANA_LESSONS_COMPLETED =", row[3])
+        print("KANJI_LESSONS_COMPLETED =", row[4])
+        print("Highest_Hira_LESSONS_COMPLETED =", row[5])
+        print("Highest_Kata_LESSONS_COMPLETED =", row[6])
+        print("Highest_Kanji_LESSONS_COMPLETED =", row[7])
+        print("Last =", row[8])

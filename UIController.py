@@ -96,7 +96,6 @@ def getLanguageSize():
     return sizeList
 
 
-# noinspection SqlNoDataSourceInspection
 def createDB():
     conn = sqlite3.connect('Database/test.db')
     print("Opened database successfully!")
@@ -113,7 +112,6 @@ def createDB():
     print("Table created successfully!")
     conn.close()
 
-# noinspection SqlNoDataSourceInspection
 def testDB():
     conn = sqlite3.connect('Database/test.db')
     '''conn.execute('INSERT INTO Profiles(name, hiragana_lessons_completed, katakana_lessons_completed, kanji_lessons_completed,'
@@ -123,18 +121,6 @@ def testDB():
                  'highest_hiragana_lesson_completed, highest_katakana_lesson_completed, highest_kanji_lesson_completed) VALUES ("Bots", 51, 25, 12, 5, 1, 1)')
     conn.commit()'''
 
-    cursor = conn.execute("SELECT * FROM Profiles")
-    for row in cursor:
-        print("ID = ", row[0])
-        print("NAME = ", row[1])
-        print("HIRAGANA_LESSONS_COMPLETED = ", row[2])
-        print("KATAKANA_LESSONS_COMPLETED = ", row[3])
-        print("KANJI_LESSONS_COMPLETED = ", row[4])
-        print("Highest_Hira_LESSONS_COMPLETED = ", row[5])
-        print("Highest_Kata_LESSONS_COMPLETED = ", row[6])
-        print("Highest_Kanji_LESSONS_COMPLETED = ", row[7])
-        print("Last = ", row[8])
-    print("Selected * Successfully!")
     conn.close()
 
 def getTotalHiraLessons(profName):
