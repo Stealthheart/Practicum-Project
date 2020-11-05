@@ -83,3 +83,21 @@ def startUpProfileSet():
         return
     setProfileInfo(profName)
 
+def deleteCurrentProfile():
+    return db.deleteProfileFromDB(currProfInfo[0])
+
+def nullList():
+    global currProfInfo
+    currProfInfo = []
+
+def checkIfSelectedProfile():
+    if currProfInfo == []:
+        return False
+    return True
+
+def checkForProfileSelectedPreviously():
+    if db.getLastUsedProfile() is None:
+        return False
+    return True
+
+

@@ -167,3 +167,14 @@ def createNewProfile(name):
 def setProfileInfoOnStartup():
     pLogic.startUpProfileSet()
 
+def deleteProfile():
+    return pLogic.deleteCurrentProfile()
+
+def clearProfileList():
+    pLogic.nullList()
+
+def isProfileSet():
+    return pLogic.checkIfSelectedProfile()
+
+def wasProfileSelectedPreviously():
+    return pLogic.checkForProfileSelectedPreviously()

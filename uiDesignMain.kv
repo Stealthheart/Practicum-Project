@@ -51,7 +51,7 @@
             pos_hint: {'center_x': .5, 'center_y': .8}
         Label:
             id: currSelectedProf
-            text: 'Welcome, Test'
+            text: ''
             font_size: 16
             pos_hint: {'center_x': .5, 'center_y': .45}
         Button:
@@ -174,7 +174,8 @@
             font_size: 18
             pos_hint: {'center_x': .7, 'center_y': .65}
         Label:
-            text: 'Profile deleted successfully!'
+            id: profileDeletionBool
+            text: ''
             font_size: 18
             pos_hint: {'center_x': .7, 'center_y': .5}
         Label:
@@ -199,32 +200,32 @@
             pos_hint: {'center_x': .75, 'center_y': .3}
         Label:
             id: highestHiraLessons
-            text: '0'
+            text: ''
             font_size: 18
             pos_hint: {'center_x': .45, 'center_y': .23}
         Label:
             id: highestKataLessons
-            text: '1'
+            text: ''
             font_size: 18
             pos_hint: {'center_x': .45, 'center_y': .16}
         Label:
             id: highestKanjiLessons
-            text: '2'
+            text: ''
             font_size: 18
             pos_hint: {'center_x': .45, 'center_y': .09}
         Label:
             id: totalHiraLessons
-            text: '3'
+            text: ''
             font_size: 18
             pos_hint: {'center_x': .75, 'center_y': .23}
         Label:
             id: totalKataLessons
-            text: '4'
+            text: ''
             font_size: 18
             pos_hint: {'center_x': .75, 'center_y': .16}
         Label:
             id: totalKanjiLessons
-            text: '5'
+            text: ''
             font_size: 18
             pos_hint: {'center_x': .75, 'center_y': .09}
         Button:
@@ -237,6 +238,7 @@
         Button:
             text: 'Delete'
             font_size: 20
+            on_release: root.showDeletePopup()
             size_hint: None, None
             size: 80, 40
             pos_hint: {'center_x': .7, 'center_y': .55}

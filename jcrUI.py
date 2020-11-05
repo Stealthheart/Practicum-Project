@@ -32,7 +32,8 @@ class StartScreen(Screen):
         super(StartScreen, self).__init__(**kwargs)
         #uiLogic.createDB()
         uiLogic.testDB()
-        uiLogic.setProfileInfoOnStartup()
+        if uiLogic.wasProfileSelectedPreviously():
+            uiLogic.setProfileInfoOnStartup()
         self.flag = 0
 
     def on_enter(self, *args):
@@ -55,7 +56,8 @@ class StartScreen(Screen):
         changeScreen(self, 'profiles')
 
     def setName(self, *args):
-        self.ids.currSelectedProf.text = "Hi, " + uiLogic.getProfileInfo(0)
+        if uiLogic.isProfileSet():
+            self.ids.currSelectedProf.text = "Hi, " + uiLogic.getProfileInfo(0)
 
     pass
 
@@ -87,16 +89,23 @@ class ProfileScreen(Screen):
         super(ProfileScreen, self).__init__(**kwargs)
         self.flag = 0
         self.createProfName = ''
-        self.pop = Popup()
+        self.createPop = Popup()
+        self.deletePop = Popup()
 
     # Generates the profile list prior to entering
     def on_pre_enter(self, *args):
+        if uiLogic.isProfileSet():
+            self.loadProfileInformation()
         self.manager.get_screen('hLessons').lockLessons()
         self.manager.get_screen('kataLessons').lockLessons()
         self.manager.get_screen('kanjiLessons').lockLessons()
         if self.flag == 0:
             generateProfileList(self)
             self.flag = 1
+
+    def on_exit(self, *args):
+        self.ids.profileCreationBool.text = ''
+        self.ids.profileDeletionBool.text = ''
 
     # Change the selected profile.
     def selectProfile(self, args):
@@ -131,16 +140,14 @@ class ProfileScreen(Screen):
         layout.add_widget(submitBtn)
         layout.add_widget(nameLabel)
         layout.add_widget(textField)
-        self.popup = Popup(title='Characters To Know', content=layout, size=(300,200), size_hint=(None, None))
-        self.popup.open()
+        self.createPop = Popup(title='Create a new Profile', content=layout, size=(300,200), size_hint=(None, None))
+        self.createPop.open()
 
     def saveName(self, *args):
         self.createProfName = args[1]
 
     def createProfile(self, *args):
-        print(self.createProfName)
-        print(self.profList.children)
-        self.popup.dismiss()
+        self.createPop.dismiss()
         success = uiLogic.createNewProfile(self.createProfName)
         if success:
             self.ids.profileCreationBool.text = "Profile Created Successfully!"
@@ -154,7 +161,52 @@ class ProfileScreen(Screen):
         else:
             self.ids.profileCreationBool.text = "Error while creating profile."
 
-        # Loads the main menu screen UI
+    def showDeletePopup(self):
+        layout = RelativeLayout()
+        deleteBtn = Button(text='Delete',
+                           size_hint=(None, None),
+                           border=(20, 20, 20, 20),
+                           size=(250, 60),
+                           pos_hint={'center_x': .5, 'center_y': .25})
+        deletePrompt = Label(text='Are you sure you want to delete the profile?',
+                             font_size=15,
+                             pos_hint={'center_x': .5, 'center_y': .85})
+        deleteName = Label(text=uiLogic.getProfileInfo(0),
+                           font_size=18,
+                           pos_hint={'center_x': .5, 'center_y': .68})
+
+        deleteBtn.bind(on_release=self.deleteProfile)
+
+        layout.add_widget(deleteBtn)
+        layout.add_widget(deletePrompt)
+        layout.add_widget(deleteName)
+        self.deletePop = Popup(title='Delete Profile', content=layout, size=(400, 200), size_hint=(None, None))
+        self.deletePop.open()
+
+    def deleteProfile(self, *args):
+        self.deletePop.dismiss()
+        success = uiLogic.deleteProfile()
+        if success:
+            self.ids.profileDeletionBool.text = "Profile Deleted Successfully!"
+        for x in range(len(self.profList.children)):
+            if self.profList.children[x].profName == uiLogic.getProfileInfo(0):
+                self.profList.remove_widget(self.profList.children[x])
+                break
+
+        lockLessons(self)
+        self.manager.get_screen('start').ids.currSelectedProf.text = ''
+        uiLogic.clearProfileList()
+        self.ids.currProfile.text = ''
+
+    def loadProfileInformation(self):
+        self.ids.highestHiraLessons.text = str(uiLogic.getProfileInfo(4))
+        self.ids.highestKataLessons.text = str(uiLogic.getProfileInfo(5))
+        self.ids.highestKanjiLessons.text = str(uiLogic.getProfileInfo(6))
+        self.ids.totalHiraLessons.text = str(uiLogic.getProfileInfo(1))
+        self.ids.totalKataLessons.text = str(uiLogic.getProfileInfo(2))
+        self.ids.totalKanjiLessons.text = str(uiLogic.getProfileInfo(3))
+
+    # Loads the main menu screen UI
     def backToStart(self):
         changeScreen(self, 'start')
 
@@ -174,9 +226,10 @@ class HiraganaLessonScreen(Screen):
 
     # Generates the lesson list prior to entering the screen. Only will run once.
     def on_pre_enter(self):
-        totalLessons = len(self.children[0].children[0].children)
-        for x in range(uiLogic.getProfileInfo(4) + 1, 0, -1):
-            self.children[0].children[0].children[totalLessons - x].disabled = False
+        if uiLogic.isProfileSet():
+            totalLessons = len(self.children[0].children[0].children)
+            for x in range(uiLogic.getProfileInfo(4) + 1, 0, -1):
+                self.children[0].children[0].children[totalLessons - x].disabled = False
 
     def generateLessons(self):
         generateLessonList(self, 0)
@@ -210,9 +263,10 @@ class KatakanaLessonScreen(Screen):
 
     #Generates the lesson list prior to entering the screen. Only will run once.
     def on_pre_enter(self):
-        totalLessons = len(self.children[0].children[0].children)
-        for x in range(uiLogic.getProfileInfo(5) + 1, 0, -1):
-            self.children[0].children[0].children[totalLessons - x].disabled = False
+        if uiLogic.isProfileSet():
+            totalLessons = len(self.children[0].children[0].children)
+            for x in range(uiLogic.getProfileInfo(5) + 1, 0, -1):
+                self.children[0].children[0].children[totalLessons - x].disabled = False
 
     def generateLessons(self):
         generateLessonList(self, 1)
@@ -247,9 +301,10 @@ class KanjiLessonScreen(Screen):
 
     # Generates the lesson list prior to entering the screen. Only will run once.
     def on_pre_enter(self):
-        totalLessons = len(self.children[0].children[0].children)
-        for x in range(uiLogic.getProfileInfo(6) + 1, 0, -1):
-            self.children[0].children[0].children[totalLessons - x].disabled = False
+        if uiLogic.isProfileSet():
+            totalLessons = len(self.children[0].children[0].children)
+            for x in range(uiLogic.getProfileInfo(6) + 1, 0, -1):
+                self.children[0].children[0].children[totalLessons - x].disabled = False
 
     def generateLessons(self):
         generateLessonList(self, 2)
@@ -531,7 +586,8 @@ def generateLessonList(screen, lang):
                         size_hint=(None, None),
                         border=(20, 20, 20, 20),
                         size=(300, 60),
-                        disabled=True)
+                        disabled=True,
+                        disabled_color=(1,1,1,1))
         button.bind(on_press=screen.setLesson)
         button.lessonNum = str(i + 1)
         layout.add_widget(button)
@@ -578,6 +634,11 @@ def generateProfileList(screen):
 '''
 def changeScreen(screen, dest):
     screen.manager.current = dest
+
+def lockLessons(screen):
+    screen.manager.get_screen('hLessons').lockLessons()
+    screen.manager.get_screen('kataLessons').lockLessons()
+    screen.manager.get_screen('kanjiLessons').lockLessons()
 
 
 # Driver method

@@ -74,7 +74,7 @@ def createProfile(profName):
     conn = sql.connect('Database/test.db')
     query = 'INSERT INTO Profiles(name, hiragana_lessons_completed, katakana_lessons_completed, kanji_lessons_completed, ' \
             'highest_hiragana_lesson_completed, highest_katakana_lesson_completed, highest_kanji_lesson_completed, last)' \
-            ' VALUES (?, 0, 0, 0, 0, 0, 0, 0)create table Profiles(	name text,	hiragana_lessons_completed int,	katakana_lessons_completed int,	kanji_lessons_completed int,	highest_hiragana_lesson_completed int,	highest_katakana_lesson_completed int,	highest_kanji_lesson_completed int,	last int);'
+            ' VALUES (?, 0, 0, 0, 0, 0, 0, 0)'
     conn.execute(query, (profName,))
     conn.commit()
 
@@ -106,3 +106,10 @@ def testDB():
         print("Highest_Kata_LESSONS_COMPLETED =", row[6])
         print("Highest_Kanji_LESSONS_COMPLETED =", row[7])
         print("Last =", row[8])
+
+def deleteProfileFromDB(profName):
+    conn = sql.connect('Database/test.db')
+    query = 'DELETE FROM Profiles WHERE NAME = ?'
+    conn.execute(query, (profName,))
+    conn.commit()
+    return True
