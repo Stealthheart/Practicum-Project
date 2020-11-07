@@ -1,52 +1,21 @@
-profileNames = []
-currProfInfo = []
-import database as db
-'''
+"""
     This class will hold the profile logic.
     Uses hardcoded array currently. Implementation of profiles will come after lessons.
-'''
+"""
 
-def getProfileNameLength():
-    return db.getNumberOfProfiles()
+profileNames = []
+currProfInfo = []
 
 def getProfileName(index):
-    global profileNames
-    profileNames = db.getProfileNames()
     return str(profileNames[index][0])
 
-def getTotalHiraLessons(profName):
-    return db.getTotalHiraLessons(profName)[0]
+def setProfileNames(nameList):
+    global profileNames
+    profileNames = nameList
 
-def getTotalKataLessons(profName):
-    return db.getTotalKataLessons(profName)[0]
-
-def getTotalKanjiLessons(profName):
-    return db.getTotalKanjiLessons(profName)[0]
-
-def getHighestHiraLessons(profName):
-    return db.getHighestHiraLessons(profName)[0]
-
-def getHighestKataLessons(profName):
-    return db.getHighestKataLessons(profName)[0]
-
-def getHighestKanjiLessons(profName):
-    return db.getHighestKanjiLessons(profName)[0]
-
-def setProfileInfo(profName):
+def setProfileInfo(profList):
     global currProfInfo
-    if currProfInfo != []:
-        print("Hello")
-        db.profileSwapped(currProfInfo[0])
-    currProfInfo = []
-    currProfInfo.append(profName)
-    currProfInfo.append(getTotalHiraLessons(profName))
-    currProfInfo.append(getTotalKataLessons(profName))
-    currProfInfo.append(getTotalKanjiLessons(profName))
-    currProfInfo.append(getHighestHiraLessons(profName))
-    currProfInfo.append(getHighestKataLessons(profName))
-    currProfInfo.append(getHighestKanjiLessons(profName))
-    currProfInfo.append(1)
-    writeToDB()
+    currProfInfo = profList
 
 def getCurrProfileName():
     return currProfInfo[0]
@@ -62,20 +31,8 @@ def incrementHighestLesson(lang):
 def getProfileInfo(index):
     return currProfInfo[index]
 
-def writeToDB():
-    db.updateProfile(currProfInfo)
-
 def incrementTotalLessons(lang):
     currProfInfo[lang + 1] += 1
-
-def startUpProfileSet():
-    profName = db.getLastUsedProfile()
-    if profName == '':
-        return
-    setProfileInfo(profName)
-
-def deleteCurrentProfile():
-    return db.deleteProfileFromDB(currProfInfo[0])
 
 def nullList():
     global currProfInfo
@@ -86,12 +43,11 @@ def checkIfSelectedProfile():
         return False
     return True
 
-def checkForProfileSelectedPreviously():
-    if db.getLastUsedProfile() is None:
-        return False
-    return True
-
 def getProfileList():
     return currProfInfo
 
+def isProfileSet():
+    if currProfInfo:
+        return True
+    return False
 

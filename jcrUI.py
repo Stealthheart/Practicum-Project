@@ -39,8 +39,7 @@ class StartScreen(Screen):
             uiLogic.createDB()
 
         # Immediately loads a profile if one was ever selected previously
-        if uiLogic.wasProfileSelectedPreviously():
-            uiLogic.setProfileInfoOnStartup()
+        uiLogic.setProfileInfoOnStartup()
 
         self.flag = 0
 
@@ -426,7 +425,7 @@ class PriorToQuestionsScreen(Screen):
 
     # Sets the information of the screen to the appropriate lesson info prior to entering
     def on_pre_enter(self, *args):
-        uiLogic.setAttr(self)
+        setAttr(self)
 
 
     '''
@@ -446,7 +445,7 @@ class PriorToQuestionsScreen(Screen):
         layout_popup.bind(minimum_height=layout_popup.setter('height'))
 
         # Creates the path for the appropriate images.
-        path = "Images/" + uiLogic.getCurrLessonScreen() + "Imgs/"
+        path = "Images/" + getCurrLessonScreen() + "Imgs/"
 
         # Loops through each character in charList and loads the image with the matching name, then adds to the layout
         for char in charList:
@@ -463,7 +462,7 @@ class PriorToQuestionsScreen(Screen):
 
     # Loads the lesson list we came from if button is pressed
     def loadOriginalLessonList(self):
-        self.manager.current = uiLogic.getCurrLessonScreen()
+        self.manager.current = getCurrLessonScreen()
 
     # Loads the question UI screen
     def startLesson(self):
@@ -489,7 +488,7 @@ class QuestionScreen(Screen):
 
     # Loads the question information prior to entering. Also disables the next question button.
     def on_pre_enter(self):
-        uiLogic.getNextQuestion(self)
+        getNextQuestion(self)
         self.ids.nextQBtn.disabled = True
 
     # Submits the drawing for checking against the AI.
@@ -520,7 +519,7 @@ class QuestionScreen(Screen):
 
     # Retrieves the next question. Will display the results screen if no more remain.
     def getNextQuestion(self):
-        lessContinues = uiLogic.getNextQuestion(self)
+        lessContinues = getNextQuestion(self)
         if not lessContinues:
             self.manager.current = 'results'
 
@@ -595,7 +594,7 @@ class ResultsScreen(Screen):
 
     # Loads the lesson list of the language selected.
     def loadLessonList(self):
-        changeScreen(self, uiLogic.getCurrLessonScreen())
+        changeScreen(self, getCurrLessonScreen())
 
     # Loads the start screen of the app
     def backToMain(self):
@@ -736,6 +735,37 @@ def unlockLessons(screen, lang):
     totalLessons = len(screen.children[0].children[0].children)
     for x in range(uiLogic.getProfileInfo(lang) + 1, 0, -1):
         screen.children[0].children[0].children[totalLessons - x].disabled = False
+
+# Returns a string resembling the screen to swap
+def getCurrLessonScreen():
+    currLang = uiLogic.getSelectedLanguageName()
+    if currLang == "Hiragana":
+        retStr = "hLessons"
+    elif currLang == "Katakana":
+        retStr = "kataLessons"
+    else:
+        retStr = "kanjiLessons"
+    return retStr
+
+# Sets the attributes of the given screen to the appropriate items set in the lesson logic.
+def setAttr(screen):
+    screen.ids.lessonText.text = uiLogic.getSelectedLanguageName()
+    screen.ids.lessonNum.text = "Lesson " + str(uiLogic.getCurrentLessonNum())
+    screen.ids.lessonTitle.text = uiLogic.getCurrentLessonTitle()
+    screen.ids.questionCount.text = str(uiLogic.getTotalQuestionCount()) + " Questions"
+    uiLogic.resetQuestionCounters()
+
+# Returns false if there are no more questions. True otherwise.
+def getNextQuestion(screen):
+    currQuestion = uiLogic.getCurrQuestionCount()
+    totalQuestions = uiLogic.getTotalQuestionCount()
+    if currQuestion == totalQuestions + 1:
+        return False
+    else:
+        screen.ids.questionLabel.text = uiLogic.getNextQuestion()
+        screen.ids.questionNum.text = "Q: " + str(currQuestion) + "/" + str(totalQuestions)
+        uiLogic.incrementQuestionNum()
+        return True
 
 # Driver method
 class ScreenManagerTestApp(App):

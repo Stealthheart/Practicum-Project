@@ -2,25 +2,6 @@ import lessonLogic as lLogic
 import profileLogic as pLogic
 import databaseController as dataLogic
 
-# Returns a string resembling the screen to swap
-def getCurrLessonScreen():
-    currLang = getSelectedLanguageName()
-    if currLang == "Hiragana":
-        retStr = "hLessons"
-    elif currLang == "Katakana":
-        retStr = "kataLessons"
-    else:
-        retStr = "kanjiLessons"
-    return retStr
-
-# Sets the attributes of the given screen to the appropriate items set in the lesson logic.
-def setAttr(screen):
-    screen.ids.lessonText.text = getSelectedLanguageName()
-    screen.ids.lessonNum.text = "Lesson " + str(getCurrentLessonNum())
-    screen.ids.lessonTitle.text = getCurrentLessonTitle()
-    screen.ids.questionCount.text = str(getTotalQuestionCount()) + " Questions"
-    lLogic.resetQuestionCounters()
-
 # Returns a string depending on if the answer was correct.
 def isAnswerCorrect():
     correct = lLogic.retrieveResultString()
@@ -30,16 +11,11 @@ def isAnswerCorrect():
         return "Incorrect"
 
 # Returns false if there are no more questions. True otherwise.
-def getNextQuestion(screen):
-    currQuestion = lLogic.getCurrQuestionCount()
-    totalQuestions = lLogic.getTotalQuestionCount()
-    if currQuestion == totalQuestions + 1:
-        return False
-    else:
-        screen.ids.questionLabel.text = lLogic.getNextQuestion()
-        screen.ids.questionNum.text = "Q: " + str(currQuestion) + "/" + str(totalQuestions)
-        lLogic.incrementQuestionNum()
-        return True
+def getNextQuestion():
+    return lLogic.getNextQuestion()
+
+def incrementQuestionNum():
+    lLogic.incrementQuestionNum()
 
 #region Helper Methods
 def getCorrectAnswer():
@@ -63,6 +39,12 @@ def getCorrectQuestionCount():
 def getTotalQuestionCount():
     return lLogic.getTotalQuestionCount()
 
+def getCurrQuestionCount():
+    return lLogic.getCurrQuestionCount()
+
+def resetQuestionCounters():
+    lLogic.resetQuestionCounters()
+
 def setupNextLessonInfo():
     lLogic.loadNextLessonInfo()
 
@@ -74,9 +56,10 @@ def setCurrLesson(lessonNum, lang):
 #endregion Helper Methods
 
 def getProfileNameLength():
-    return pLogic.getProfileNameLength()
+    return dataLogic.getNumProfiles()
 
 def getProfileName(index):
+    pLogic.setProfileNames(dataLogic.getProfileNameList())
     return pLogic.getProfileName(index)
 
 def generateLessons(lang):
@@ -96,25 +79,29 @@ def getLanguageSize():
     return sizeList
 
 def getTotalHiraLessons(profName):
-    return pLogic.getTotalHiraLessons(profName)
+    return dataLogic.getTotalHiraLessons(profName)
 
 def getTotalKataLessons(profName):
-    return pLogic.getTotalKataLessons(profName)
+    return dataLogic.getTotalKataLessons(profName)
 
 def getTotalKanjiLessons(profName):
-    return pLogic.getTotalKanjiLessons(profName)
+    return dataLogic.getTotalKanjiLessons(profName)
 
 def getHighestKanjiLessons(profName):
-    return pLogic.getHighestKanjiLessons(profName)
+    return dataLogic.getHighestKanjiLessons(profName)
 
 def getHighestKataLessons(profName):
-    return pLogic.getHighestKataLessons(profName)
+    return dataLogic.getHighestKataLessons(profName)
 
 def getHighestHiraLessons(profName):
-    return pLogic.getHighestHiraLessons(profName)
+    return dataLogic.getHighestHiraLessons(profName)
 
 def setProfileInfo(profName):
-    pLogic.setProfileInfo(profName)
+    if pLogic.isProfileSet():
+        dataLogic.profileSwapped(pLogic.getProfileInfo(0))
+    profInfo = dataLogic.getProfileList(profName)
+    pLogic.setProfileInfo(profInfo)
+    dataLogic.writeInfoToDB(pLogic.getProfileList())
 
 def checkPerformance():
     if lLogic.unlockedNextLesson() and lLogic.getCurrentLessonNum() == pLogic.getProfileInfo(lLogic.getLangNumber() + 4):
@@ -138,10 +125,13 @@ def createNewProfile(name):
     return False
 
 def setProfileInfoOnStartup():
-    pLogic.startUpProfileSet()
+    prevProf = dataLogic.wasProfileSetPreviously()
+    if prevProf is None:
+        return
+    setProfileInfo(prevProf)
 
 def deleteProfile():
-    return pLogic.deleteCurrentProfile()
+    return dataLogic.deleteCurrentProfile(pLogic.getProfileInfo(0))
 
 def clearProfileList():
     pLogic.nullList()
@@ -150,7 +140,7 @@ def isProfileSet():
     return pLogic.checkIfSelectedProfile()
 
 def wasProfileSelectedPreviously():
-    return pLogic.checkForProfileSelectedPreviously()
+    return dataLogic.checkForProfileSelectedPreviously()
 
 #region Database Methods
 

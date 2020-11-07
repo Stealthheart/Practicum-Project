@@ -111,3 +111,17 @@ def deleteProfileFromDB(profName):
     conn.execute(query, (profName,))
     conn.commit()
     return True
+
+def createDatabase():
+    conn = sql.connect('Database/test.db')
+    conn.execute('CREATE TABLE Profiles\n'
+                 '        (id INTEGER PRIMARY KEY,\n'
+                 '        name TEXT NOT NULL,\n'
+                 '        hiragana_lessons_completed INT NOT NULL,\n'
+                 '        katakana_lessons_completed INT NOT NULL,\n'
+                 '        kanji_lessons_completed INT NOT NULL,\n'
+                 '        highest_hiragana_lesson_completed INT NOT NULL,\n'
+                 '        highest_katakana_lesson_completed INT NOT NULL,\n'
+                 '        highest_kanji_lesson_completed INT NOT NULL,\n'
+                 '        last INT NOT NULL);')
+    conn.close()
