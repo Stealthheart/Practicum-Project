@@ -1,6 +1,6 @@
 import lessonLogic as lLogic
 import profileLogic as pLogic
-import sqlite3
+import databaseController as dataLogic
 
 # Returns a string resembling the screen to swap
 def getCurrLessonScreen():
@@ -95,34 +95,6 @@ def getLanguageSize():
         sizeList[1] = 256
     return sizeList
 
-
-def createDB():
-    conn = sqlite3.connect('Database/test.db')
-    print("Opened database successfully!")
-    conn.execute('CREATE TABLE Profiles\n'
-                 '        (id INTEGER PRIMARY KEY,\n'
-                 '        name TEXT NOT NULL,\n'
-                 '        hiragana_lessons_completed INT NOT NULL,\n'
-                 '        katakana_lessons_completed INT NOT NULL,\n'
-                 '        kanji_lessons_completed INT NOT NULL,\n'
-                 '        highest_hiragana_lesson_completed INT NOT NULL,\n'
-                 '        highest_katakana_lesson_completed INT NOT NULL,\n'
-                 '        highest_kanji_lesson_completed INT NOT NULL,\n'
-                 '        last INT NOT NULL);')
-    print("Table created successfully!")
-    conn.close()
-
-def testDB():
-    conn = sqlite3.connect('Database/test.db')
-    '''conn.execute('INSERT INTO Profiles(name, hiragana_lessons_completed, katakana_lessons_completed, kanji_lessons_completed,'
-                 'highest_hiragana_lesson_completed, highest_katakana_lesson_completed, highest_kanji_lesson_completed) VALUES ("Auto", 12, 21, 30, 9, 1, 1)')
-    conn.execute(
-        'INSERT INTO Profiles(name, hiragana_lessons_completed, katakana_lessons_completed, kanji_lessons_completed,'
-                 'highest_hiragana_lesson_completed, highest_katakana_lesson_completed, highest_kanji_lesson_completed) VALUES ("Bots", 51, 25, 12, 5, 1, 1)')
-    conn.commit()'''
-
-    conn.close()
-
 def getTotalHiraLessons(profName):
     return pLogic.getTotalHiraLessons(profName)
 
@@ -156,11 +128,12 @@ def getProfileInfo(index):
     return pLogic.getProfileInfo(index)
 
 def saveInformation():
-    pLogic.writeToDB()
+    profInfo = pLogic.getProfileList()
+    dataLogic.writeInfoToDB(profInfo)
 
 def createNewProfile(name):
-    if pLogic.canCreateProfile(name):
-        pLogic.createNewProfile(name)
+    if dataLogic.canCreateProfile(name):
+        dataLogic.createNewProfile(name)
         return True
     return False
 
@@ -178,3 +151,13 @@ def isProfileSet():
 
 def wasProfileSelectedPreviously():
     return pLogic.checkForProfileSelectedPreviously()
+
+#region Database Methods
+
+def createDB():
+    dataLogic.createDB()
+
+def doesDatabaseExist():
+    return dataLogic.doesDatabaseExist()
+
+#endregion

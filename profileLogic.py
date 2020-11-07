@@ -68,15 +68,6 @@ def writeToDB():
 def incrementTotalLessons(lang):
     currProfInfo[lang + 1] += 1
 
-def canCreateProfile(profName):
-    if db.checkIfProfileExists(profName) == 0:
-        print("Hello??")
-        return True
-    return False
-
-def createNewProfile(profName):
-    db.createProfile(profName)
-
 def startUpProfileSet():
     profName = db.getLastUsedProfile()
     if profName == '':
@@ -99,5 +90,8 @@ def checkForProfileSelectedPreviously():
     if db.getLastUsedProfile() is None:
         return False
     return True
+
+def getProfileList():
+    return currProfInfo
 
 

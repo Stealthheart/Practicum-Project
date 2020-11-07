@@ -49,7 +49,6 @@ def getHighestKanjiLessons(profName):
     return cursor.fetchone()
 
 def updateProfile(infoList):
-    print("hello?????")
     conn = sql.connect('Database/test.db')
     query = 'UPDATE Profiles SET hiragana_lessons_completed = ?,' \
             '                    katakana_lessons_completed = ?,' \
@@ -88,7 +87,6 @@ def getLastUsedProfile():
 def profileSwapped(profName):
     conn = sql.connect('Database/test.db')
     query = 'UPDATE Profiles SET last = 0 WHERE name = ?'
-    print(profName)
     conn.execute(query, (profName,))
     conn.commit()
     testDB()
