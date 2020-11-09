@@ -1,119 +1,182 @@
 import sqlite3 as sql
+conn = None
 
-def getNumberOfProfiles():
-    conn = sql.connect('Database/test.db')
-    cursor = conn.execute("SELECT COUNT(*) FROM Profiles")
-    for row in cursor:
-        profNum = row[0]
+'''
+    Makes the connection to the database
+'''
+def connectToDB():
+    global conn
+    conn = sql.connect('Database/profiles.db')
+
+'''
+    Closes the connection to the database
+'''
+def disconnectFromDB():
     conn.close()
-    return profNum
 
+'''
+    Queries the database and returns the number of profiles inside the Profiles table.
+'''
+def getNumberOfProfiles():
+    connectToDB()
+    cursor = conn.execute("SELECT COUNT(*) FROM Profiles")
+    profNum = cursor.fetchone()
+    disconnectFromDB()
+    return profNum[0]
+
+'''
+    Returns a list of all the names inside the Profiles table.
+'''
 def getProfileNames():
-    conn = sql.connect('Database/test.db')
+    connectToDB()
     cursor = conn.execute("SELECT NAME FROM Profiles")
     retList = cursor.fetchall()
-    conn.close()
+    disconnectFromDB()
     return retList
 
-
+'''
+    Returns a tuple of the hiragana lessons completed for the given profile name
+'''
 def getTotalHiraLessons(profName):
-    conn = sql.connect('Database/test.db')
+    connectToDB()
     cursor = conn.execute("SELECT hiragana_lessons_completed FROM Profiles WHERE NAME = ?", (profName,))
-    return cursor.fetchone()
+    retTup = cursor.fetchone()
+    disconnectFromDB()
+    return retTup
 
-
+'''
+    Returns a tuple of the katakana lessons completed for the given profile name
+'''
 def getTotalKataLessons(profName):
-    conn = sql.connect('Database/test.db')
+    connectToDB()
     cursor = conn.execute("SELECT katakana_lessons_completed FROM Profiles WHERE NAME = ?", (profName,))
-    return cursor.fetchone()
+    retTup = cursor.fetchone()
+    disconnectFromDB()
+    return retTup
 
-
+'''
+    Returns a tuple of the kanji lessons completed for the given profile name
+'''
 def getTotalKanjiLessons(profName):
-    conn = sql.connect('Database/test.db')
+    connectToDB()
     cursor = conn.execute("SELECT kanji_lessons_completed FROM Profiles WHERE NAME = ?", (profName,))
-    return cursor.fetchone()
+    retTup = cursor.fetchone()
+    disconnectFromDB()
+    return retTup
 
+'''
+    Returns a tuple of the highest hiragana lesson completed for the given profile name
+'''
 def getHighestHiraLessons(profName):
-    conn = sql.connect('Database/test.db')
+    connectToDB()
     cursor = conn.execute("SELECT highest_hiragana_lesson_completed FROM Profiles WHERE NAME = ?", (profName,))
-    return cursor.fetchone()
+    retTup = cursor.fetchone()
+    disconnectFromDB()
+    return retTup
 
+'''
+    Returns a tuple of the highest katakana lesson completed for the given profile name
+'''
 def getHighestKataLessons(profName):
-    conn = sql.connect('Database/test.db')
+    connectToDB()
     cursor = conn.execute("SELECT highest_katakana_lesson_completed FROM Profiles WHERE NAME = ?", (profName,))
-    return cursor.fetchone()
+    retTup = cursor.fetchone()
+    disconnectFromDB()
+    return retTup
 
+'''
+    Returns a tuple of the highest kanji lesson completed for the given profile name
+'''
 def getHighestKanjiLessons(profName):
-    conn = sql.connect('Database/test.db')
+    connectToDB()
     cursor = conn.execute("SELECT highest_kanji_lesson_completed FROM Profiles WHERE NAME = ?", (profName,))
-    return cursor.fetchone()
+    retTup = cursor.fetchone()
+    disconnectFromDB()
+    return retTup
 
+'''
+    Saves updated profile information into the table.
+'''
 def updateProfile(infoList):
-    conn = sql.connect('Database/test.db')
-    query = 'UPDATE Profiles SET hiragana_lessons_completed = ?,' \
-            '                    katakana_lessons_completed = ?,' \
-            '                    kanji_lessons_completed = ?,' \
-            '                    highest_hiragana_lesson_completed = ?,' \
-            '                    highest_katakana_lesson_completed = ?,' \
-            '                    highest_kanji_lesson_completed = ?,' \
-            '                    last = ? ' \
-            '               WHERE name = ?'
-    conn.execute(query, (infoList[1], infoList[2], infoList[3], infoList[4], infoList[5], infoList[6], infoList[7], infoList[0]))
+    connectToDB()
+    query = "UPDATE Profiles SET hiragana_lessons_completed = ?," \
+            "katakana_lessons_completed = ?, " \
+            "kanji_lessons_completed = ?,  " \
+            "highest_hiragana_lesson_completed = ?, " \
+            "highest_katakana_lesson_completed = ?, " \
+            "highest_kanji_lesson_completed = ?, " \
+            "last = ? " \
+            "WHERE name = ?"
+    conn.execute(query, (infoList[1], infoList[2], infoList[3], infoList[4],
+                         infoList[5], infoList[6], infoList[7], infoList[0]))
     conn.commit()
-    conn.close()
+    disconnectFromDB()
 
+'''
+    Check if the given profile exists within the table.
+'''
 def checkIfProfileExists(profName):
-    conn = sql.connect('Database/test.db')
+    returnVal = -1
+    connectToDB()
     query = 'SELECT COUNT(*) FROM Profiles WHERE NAME = ?'
     cursor = conn.execute(query, (profName,))
     for row in cursor:
-        return row[0]
+        returnVal = row[0]
+    disconnectFromDB()
+    return returnVal
 
+'''
+    Creates a new profile and stores it into the database with default values.
+'''
 def createProfile(profName):
-    conn = sql.connect('Database/test.db')
-    query = 'INSERT INTO Profiles(name, hiragana_lessons_completed, katakana_lessons_completed, kanji_lessons_completed, ' \
-            'highest_hiragana_lesson_completed, highest_katakana_lesson_completed, highest_kanji_lesson_completed, last)' \
+    connectToDB()
+    query = 'INSERT INTO Profiles(name, hiragana_lessons_completed, katakana_lessons_completed, ' \
+            'kanji_lessons_completed, highest_hiragana_lesson_completed, highest_katakana_lesson_completed, ' \
+            'highest_kanji_lesson_completed, last)' \
             ' VALUES (?, 0, 0, 0, 0, 0, 0, 0)'
     conn.execute(query, (profName,))
     conn.commit()
+    disconnectFromDB()
 
+'''
+    Returns the profile name of the last selected profile.
+'''
 def getLastUsedProfile():
-    conn = sql.connect('Database/test.db')
+    profName = ()
+    connectToDB()
     query = 'SELECT name FROM Profiles WHERE last = 1'
     cursor = conn.execute(query)
     for row in cursor:
-        return row[0]
+        profName = row[0]
+    disconnectFromDB()
+    return profName
 
+'''
+    Changes the last column for the given profile name, to indicate another profile was selected.
+'''
 def profileSwapped(profName):
-    conn = sql.connect('Database/test.db')
+    connectToDB()
     query = 'UPDATE Profiles SET last = 0 WHERE name = ?'
     conn.execute(query, (profName,))
     conn.commit()
-    testDB()
+    disconnectFromDB()
 
-def testDB():
-    conn = sql.connect('Database/test.db')
-    cursor = conn.execute("SELECT * FROM Profiles")
-    for row in cursor:
-        print("ID =", row[0])
-        print("NAME =", row[1])
-        print("HIRAGANA_LESSONS_COMPLETED =", row[2])
-        print("KATAKANA_LESSONS_COMPLETED =", row[3])
-        print("KANJI_LESSONS_COMPLETED =", row[4])
-        print("Highest_Hira_LESSONS_COMPLETED =", row[5])
-        print("Highest_Kata_LESSONS_COMPLETED =", row[6])
-        print("Highest_Kanji_LESSONS_COMPLETED =", row[7])
-        print("Last =", row[8])
-
+'''
+    Deletes the given profile name from the database
+'''
 def deleteProfileFromDB(profName):
-    conn = sql.connect('Database/test.db')
+    connectToDB()
     query = 'DELETE FROM Profiles WHERE NAME = ?'
     conn.execute(query, (profName,))
     conn.commit()
+    disconnectFromDB()
     return True
 
+'''
+    Creates the Profiles table within the database file if it doesn't exist.
+'''
 def createDatabase():
-    conn = sql.connect('Database/test.db')
+    connectToDB()
     conn.execute('CREATE TABLE Profiles\n'
                  '        (id INTEGER PRIMARY KEY,\n'
                  '        name TEXT NOT NULL,\n'
@@ -124,4 +187,4 @@ def createDatabase():
                  '        highest_katakana_lesson_completed INT NOT NULL,\n'
                  '        highest_kanji_lesson_completed INT NOT NULL,\n'
                  '        last INT NOT NULL);')
-    conn.close()
+    disconnectFromDB()

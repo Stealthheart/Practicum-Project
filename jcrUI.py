@@ -13,6 +13,7 @@ from kivy.uix.widget import Widget
 from kivy.graphics import Color, Line
 from kivy.uix.popup import Popup
 from kivy.properties import ListProperty, Clock
+from PIL import Image as pilImg
 
 # Sets the config first
 Config.set('graphics', 'width', '500')
@@ -20,7 +21,7 @@ Config.set('graphics', 'height', '800')
 Config.set('graphics', 'resizable', False)
 
 # helper file to modularize the code
-import UIController as uiLogic
+import mainController as cont
 
 # loads kv file to control the design of the us
 with open("uiDesignMain.kv", encoding='utf-8') as f:
@@ -35,12 +36,12 @@ class StartScreen(Screen):
         super(StartScreen, self).__init__(**kwargs)
 
         # Creates the database file if it is missing
-        if not uiLogic.doesDatabaseExist():
-            uiLogic.createDB()
+        cont.createDB()
 
         # Immediately loads a profile if one was ever selected previously
-        uiLogic.setProfileInfoOnStartup()
+        cont.setProfileInfoOnStartup()
 
+        # Controls the generation of lessons
         self.flag = 0
 
     # Calls a helper method when the screen is entered to show the currently selected profile.
@@ -68,8 +69,8 @@ class StartScreen(Screen):
 
     # Sets the profile name on the start screen
     def setName(self, *args):
-        if uiLogic.isProfileSet():
-            self.ids.currSelectedProf.text = "Hi, " + uiLogic.getProfileInfo(0)
+        if cont.isProfileSet():
+            self.ids.currSelectedProf.text = "Hi, " + cont.getProfileInfo(0)
 
     pass
 
@@ -111,11 +112,11 @@ class ProfileScreen(Screen):
     # Generates the profile list prior to entering
     def on_pre_enter(self, *args):
         # Will update profile information if one is already set
-        if uiLogic.isProfileSet():
+        if cont.isProfileSet():
             self.loadProfileInformation()
 
         # Disables delete button if no profile is selected
-        if not uiLogic.isProfileSet():
+        if not cont.isProfileSet():
             self.children[0].children[1].disabled = True
 
         # Will populate the profile list only on the first load
@@ -130,7 +131,7 @@ class ProfileScreen(Screen):
     # Changes the selected profile and updates lessons accordingly.
     def selectProfile(self, args):
         # Sets profile info internally to allow quick access
-        uiLogic.setProfileInfo(args.profName)
+        cont.setProfileInfo(args.profName)
 
         # Loads profile information
         self.loadProfileInformation(self)
@@ -193,7 +194,7 @@ class ProfileScreen(Screen):
         self.createPop.dismiss()
 
         # Tries to create the new profile
-        success = uiLogic.createNewProfile(self.createProfName)
+        success = cont.createNewProfile(self.createProfName)
 
         # Checks if the profile was created successfully
         if success:
@@ -231,7 +232,7 @@ class ProfileScreen(Screen):
                              pos_hint={'center_x': .5, 'center_y': .85})
 
         # The currently selected profile to be deleted
-        deleteName = Label(text=uiLogic.getProfileInfo(0),
+        deleteName = Label(text=cont.getProfileInfo(0),
                            font_size=18,
                            pos_hint={'center_x': .5, 'center_y': .68})
 
@@ -256,7 +257,7 @@ class ProfileScreen(Screen):
         self.deletePop.dismiss()
 
         # Checks if the profile is deleted successfully (Should always succeed)
-        success = uiLogic.deleteProfile()
+        success = cont.deleteProfile()
 
         # Checks if the deletion was successful
         if success:
@@ -264,7 +265,7 @@ class ProfileScreen(Screen):
 
         # Loops through the buttons in the list to remove the current selected profile.
         for x in range(len(self.profList.children)):
-            if self.profList.children[x].profName == uiLogic.getProfileInfo(0):
+            if self.profList.children[x].profName == cont.getProfileInfo(0):
                 self.profList.remove_widget(self.profList.children[x])
                 break
 
@@ -273,7 +274,7 @@ class ProfileScreen(Screen):
 
         # Clears out all of the deleted profile information from the app
         self.manager.get_screen('start').ids.currSelectedProf.text = ''
-        uiLogic.clearProfileList()
+        cont.clearProfileList()
         self.ids.currProfile.text = ''
 
         # Disables delete button until a new profile is selected
@@ -282,16 +283,16 @@ class ProfileScreen(Screen):
     # A helper method to help display the information relavent to the profile.
     def loadProfileInformation(self, *args):
         # Sets the various lesson information for the profile
-        self.ids.highestHiraLessons.text = str(uiLogic.getProfileInfo(4))
-        self.ids.highestKataLessons.text = str(uiLogic.getProfileInfo(5))
-        self.ids.highestKanjiLessons.text = str(uiLogic.getProfileInfo(6))
-        self.ids.totalHiraLessons.text = str(uiLogic.getProfileInfo(1))
-        self.ids.totalKataLessons.text = str(uiLogic.getProfileInfo(2))
-        self.ids.totalKanjiLessons.text = str(uiLogic.getProfileInfo(3))
+        self.ids.highestHiraLessons.text = str(cont.getProfileInfo(4))
+        self.ids.highestKataLessons.text = str(cont.getProfileInfo(5))
+        self.ids.highestKanjiLessons.text = str(cont.getProfileInfo(6))
+        self.ids.totalHiraLessons.text = str(cont.getProfileInfo(1))
+        self.ids.totalKataLessons.text = str(cont.getProfileInfo(2))
+        self.ids.totalKanjiLessons.text = str(cont.getProfileInfo(3))
 
         # Sets the profile name in the start menu and the profile menu
-        self.ids.currProfile.text = "Welcome, " + uiLogic.getProfileInfo(0)
-        self.manager.get_screen('start').ids.currSelectedProf.text = "Hi, " + uiLogic.getProfileInfo(0)
+        self.ids.currProfile.text = "Welcome, " + cont.getProfileInfo(0)
+        self.manager.get_screen('start').ids.currSelectedProf.text = "Hi, " + cont.getProfileInfo(0)
 
     # A helper method to reset the labels whenever a profile is selected or when the screen is left.
     def hideBoolLabels(self, *args):
@@ -318,7 +319,7 @@ class HiraganaLessonScreen(Screen):
 
     # Unlocks lessons appropriately for the selected user profile
     def on_pre_enter(self):
-        if uiLogic.isProfileSet():
+        if cont.isProfileSet():
             unlockLessons(self, 4)
 
     # Generates the lesson list, with 0 being the value for Hiragana
@@ -327,7 +328,7 @@ class HiraganaLessonScreen(Screen):
 
     # Loads the selected lesson
     def setLesson(self, args):
-        uiLogic.setCurrLesson(args.lessonNum, 0)
+        cont.setCurrLesson(args.lessonNum, 0)
         self.manager.current = "priorToQuestions"
 
     # locks the lessons of this language
@@ -353,7 +354,7 @@ class KatakanaLessonScreen(Screen):
 
     #Generates the lesson list prior to entering the screen. Only will run once.
     def on_pre_enter(self):
-        if uiLogic.isProfileSet():
+        if cont.isProfileSet():
             unlockLessons(self, 5)
 
     # Generates the lesson list, with 1 being the value for Katakana
@@ -362,7 +363,7 @@ class KatakanaLessonScreen(Screen):
 
     # Loads the selected lesson
     def setLesson(self, args):
-        uiLogic.setCurrLesson(args.lessonNum, 1)
+        cont.setCurrLesson(args.lessonNum, 1)
         self.manager.current = "priorToQuestions"
 
     # locks the lessons of this language
@@ -389,7 +390,7 @@ class KanjiLessonScreen(Screen):
 
     # Generates the lesson list prior to entering the screen. Only will run once.
     def on_pre_enter(self):
-        if uiLogic.isProfileSet():
+        if cont.isProfileSet():
             unlockLessons(self, 6)
 
     # Generates the lesson list, with 2 being the value for Kanji
@@ -398,7 +399,7 @@ class KanjiLessonScreen(Screen):
 
     # Loads the selected lesson
     def setLesson(self, args):
-        uiLogic.setCurrLesson(args.lessonNum, 2)
+        cont.setCurrLesson(args.lessonNum, 2)
         self.manager.current = "priorToQuestions"
 
     # locks the lessons of this language
@@ -435,10 +436,10 @@ class PriorToQuestionsScreen(Screen):
     '''
     def displayPopup(self):
         # Loads the imgs from the lesson array
-        charList = uiLogic.getImgList()
+        charList = cont.getImgList()
 
         # Checks what size the padding and images should be.
-        imgSize = uiLogic.getLanguageSize()
+        imgSize = cont.getLanguageSize()
 
         #Creates a grid layout to display the images
         layout_popup = GridLayout(cols=1, spacing=10, size_hint_y=None, padding=[imgSize[0],0,0,0])
@@ -466,7 +467,7 @@ class PriorToQuestionsScreen(Screen):
 
     # Loads the question UI screen
     def startLesson(self):
-        uiLogic.removeImgList()
+        cont.removeImgList()
         changeScreen(self, 'question')
 
     # Loads the main menu UI screen
@@ -507,7 +508,7 @@ class QuestionScreen(Screen):
 
     # Will send the answer to the logic to determine if it is correct.
     def getAnswerResult(self):
-        return uiLogic.isAnswerCorrect()
+        return cont.isAnswerCorrect()
 
     # This will retrieve the answer the AI determines
     def getUserAnswer(self):
@@ -515,7 +516,7 @@ class QuestionScreen(Screen):
 
     # This will retrieve the correct answer stored in the question
     def getCorrectAnswer(self):
-        return uiLogic.getCorrectAnswer()
+        return cont.getCorrectAnswer()
 
     # Retrieves the next question. Will display the results screen if no more remain.
     def getNextQuestion(self):
@@ -556,29 +557,31 @@ class ResultsScreen(Screen):
         # Will display the relevant information, then call the logic to save information of the profile.
         self.showQuestionInfo()
         self.displayPerformance()
-        uiLogic.checkPerformance()
-        uiLogic.saveInformation()
+        cont.checkPerformance()
+        cont.saveInformation()
 
         # disables next lesson button if there are no more lessons after the one completed.
-        if not uiLogic.checkIfMoreLessons():
+        if not cont.checkIfMoreLessons():
             self.ids.resNextLessonBtn.disabled = True
-        if uiLogic.getCurrentLessonNum() > uiLogic.getProfileInfo(uiLogic.getLangNum() + 4):
+        else:
+            self.ids.resNextLessonBtn.disabled = False
+        if cont.getCurrentLessonNum() > cont.getProfileInfo(cont.getLangNum() + 4):
             self.ids.resNextLessonBtn.disabled = True
 
     # Displays information regarding to the lesson and question counts.
     def showQuestionInfo(self):
         # Stores correct information to display in the relevant fields.
-        self.ids.resCurrLessonLang.text = uiLogic.getSelectedLanguageName()
-        self.ids.resCurrLessonNum.text = "Lesson " + str(uiLogic.getCurrentLessonNum())
-        self.ids.resCurrLessonTitle.text = uiLogic.getCurrentLessonTitle()
-        self.ids.resTotalCorrect.text = str(uiLogic.getCorrectQuestionCount()) + "/" + \
-                                        str(uiLogic.getTotalQuestionCount()) + " correct"
+        self.ids.resCurrLessonLang.text = cont.getSelectedLanguageName()
+        self.ids.resCurrLessonNum.text = "Lesson " + str(cont.getCurrentLessonNum())
+        self.ids.resCurrLessonTitle.text = cont.getCurrentLessonTitle()
+        self.ids.resTotalCorrect.text = str(cont.getCorrectQuestionCount()) + "/" + \
+                                        str(cont.getTotalQuestionCount()) + " correct"
 
     # Displays accuracy and info text detailing if the next lesson has been unlocked.
     def displayPerformance(self):
         # Stores percentage value for repeated use.
-        percentage = 100 * (float(uiLogic.getCorrectQuestionCount()) / float(uiLogic.getTotalQuestionCount()))
-        self.ids.resAccuracy.text = "Accuracy: " + str(percentage) + "%"
+        percentage = 100 * (float(cont.getCorrectQuestionCount()) / float(cont.getTotalQuestionCount()))
+        self.ids.resAccuracy.text = "Accuracy: {:0.2f}%".format(percentage)
 
         # Displays a different message depending on if you passed the lesson or not.
         if percentage >= 80:
@@ -589,7 +592,7 @@ class ResultsScreen(Screen):
 
     # Loads the next lesson immediately
     def loadNextLesson(self):
-        uiLogic.setupNextLessonInfo()
+        cont.setupNextLessonInfo()
         changeScreen(self, 'priorToQuestions')
 
     # Loads the lesson list of the language selected.
@@ -618,8 +621,11 @@ class MyPaintWidget(Widget):
     # Stores the drawn answer into a jpg, then passes it to the logic to check against the AI.
     def submitAnswer(self):
         self.export_to_png("image.jpg")
+        image = pilImg.open(r"image.jpg")
+        imTest = image.crop((25, 200, 475, 575))
+        imTest.save('image.jpg')
         image = open('image.jpg')
-        uiLogic.sendAnswer(image)
+        cont.sendAnswer(image)
 
     # Captures the x and y coordinates when the user clicks or presses down on the drawing canvas
     def on_touch_down(self, touch):
@@ -661,7 +667,7 @@ def checkWithinCanvas(x, y):
 '''
 def generateLessonList(screen, lang):
     # Gets the lesson array
-    lessonArr = uiLogic.generateLessons(lang)
+    lessonArr = cont.generateLessons(lang)
 
     # Creates a new layout for the lessons.
     layout = GridLayout(cols=1, spacing=15, size_hint_y=None, padding=[100, 0, 0, 0])
@@ -699,14 +705,14 @@ def generateProfileList(screen):
     screen.profList = layout
 
     # Loops through the entire profile list
-    for i in range(uiLogic.getProfileNameLength()):
+    for i in range(cont.getProfileNameLength()):
         # Creates new button for each element, naming and id'ing them appropriately.
-        button = Button(text=uiLogic.getProfileName(i),
+        button = Button(text=cont.getProfileName(i),
                         size_hint=(None, None),
                         border=(20, 20, 20, 20),
                         size=(150, 40))
         button.bind(on_press=screen.selectProfile)
-        button.profName = uiLogic.getProfileName(i)
+        button.profName = cont.getProfileName(i)
         layout.add_widget(button)
 
     # Creates a scrollable layout to hold the lessons.
@@ -731,14 +737,19 @@ def lockLessons(screen):
     screen.manager.get_screen('kataLessons').lockLessons()
     screen.manager.get_screen('kanjiLessons').lockLessons()
 
+'''
+    Unlocks the lessons less than or equal to the highest completed lesson of the profile.
+'''
 def unlockLessons(screen, lang):
     totalLessons = len(screen.children[0].children[0].children)
-    for x in range(uiLogic.getProfileInfo(lang) + 1, 0, -1):
+    for x in range(cont.getProfileInfo(lang) + 1, 0, -1):
         screen.children[0].children[0].children[totalLessons - x].disabled = False
 
-# Returns a string resembling the screen to swap
+'''
+    Returns a string resembling the screen to swap
+'''
 def getCurrLessonScreen():
-    currLang = uiLogic.getSelectedLanguageName()
+    currLang = cont.getSelectedLanguageName()
     if currLang == "Hiragana":
         retStr = "hLessons"
     elif currLang == "Katakana":
@@ -747,31 +758,35 @@ def getCurrLessonScreen():
         retStr = "kanjiLessons"
     return retStr
 
-# Sets the attributes of the given screen to the appropriate items set in the lesson logic.
+'''
+    Sets the attributes of the given screen to the appropriate items set in the lesson logic.
+'''
 def setAttr(screen):
-    screen.ids.lessonText.text = uiLogic.getSelectedLanguageName()
-    screen.ids.lessonNum.text = "Lesson " + str(uiLogic.getCurrentLessonNum())
-    screen.ids.lessonTitle.text = uiLogic.getCurrentLessonTitle()
-    screen.ids.questionCount.text = str(uiLogic.getTotalQuestionCount()) + " Questions"
-    uiLogic.resetQuestionCounters()
+    screen.ids.lessonText.text = cont.getSelectedLanguageName()
+    screen.ids.lessonNum.text = "Lesson " + str(cont.getCurrentLessonNum())
+    screen.ids.lessonTitle.text = cont.getCurrentLessonTitle()
+    screen.ids.questionCount.text = str(cont.getTotalQuestionCount()) + " Questions"
+    cont.resetQuestionCounters()
 
-# Returns false if there are no more questions. True otherwise.
+'''
+    Returns false if there are no more questions. True otherwise. Also sets the question number label
+'''
 def getNextQuestion(screen):
-    currQuestion = uiLogic.getCurrQuestionCount()
-    totalQuestions = uiLogic.getTotalQuestionCount()
+    currQuestion = cont.getCurrQuestionCount()
+    totalQuestions = cont.getTotalQuestionCount()
     if currQuestion == totalQuestions + 1:
         return False
     else:
-        screen.ids.questionLabel.text = uiLogic.getNextQuestion()
+        screen.ids.questionLabel.text = cont.getNextQuestion()
         screen.ids.questionNum.text = "Q: " + str(currQuestion) + "/" + str(totalQuestions)
-        uiLogic.incrementQuestionNum()
+        cont.incrementQuestionNum()
         return True
 
 # Driver method
-class ScreenManagerTestApp(App):
+class JCRApp(App):
     def build(self):
         return MyScreenManager()
 
 
 if __name__ == "__main__":
-    ScreenManagerTestApp().run()
+    JCRApp().run()
