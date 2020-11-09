@@ -1,5 +1,6 @@
 #encoding: utf-8
 #:import App kivy.app.App
+#:import Factory kivy.factory.Factory
 <MyScreenManager>:
     id: 'manager'
     StartScreen:
@@ -48,6 +49,11 @@
             font_size: 40
             size: 100, 100
             pos_hint: {'center_x': .5, 'center_y': .8}
+        Label:
+            id: currSelectedProf
+            text: ''
+            font_size: 16
+            pos_hint: {'center_x': .5, 'center_y': .45}
         Button:
             text: 'Courses'
             font_size: 20
@@ -68,7 +74,7 @@
             on_release: App.get_running_app().stop()
             size_hint: None, None
             size: 300, 50
-            pos_hint: {'center_x': .5, 'center_y': .4}
+            pos_hint: {'center_x': .5, 'center_y': .3}
 
 <CourseScreen>:
     name: 'course'
@@ -131,43 +137,108 @@
             Line:
                 width: 5
                 rectangle: (25, 285, 200, 295)
+            Line:
+                width: 2
+                rectangle: (50, 40, 400, 230)
+            Line:
+                width: 2
+                points: (300, 40, 300, 270)
+            Line:
+                width: 2
+                points: (150, 40, 150, 270)
+            Line:
+                width: 2
+                points: (50, 210, 450, 210)
+            Line:
+                width: 2
+                points: (50, 155, 450, 155)
+            Line:
+                width: 2
+                points: (50, 100, 450, 100)
         Label:
             text: 'Profiles'
             font_size: 36
             pos_hint: {'center_x': .5, 'center_y': .90}
         Label:
+            id: currProfile
+            text: ''
+            font_size: 22
+            pos_hint: {'center_x': .5, 'center_y': .81}
+        Label:
             text: 'Created Profiles'
             font_size: 24
             pos_hint: {'center_x': .25, 'center_y': .76}
         Label:
-            text: 'Profile created successfully!'
+            id: profileCreationBool
+            text: ''
             font_size: 18
             pos_hint: {'center_x': .7, 'center_y': .65}
         Label:
-            text: 'Profile deleted successfully!'
+            id: profileDeletionBool
+            text: ''
             font_size: 18
             pos_hint: {'center_x': .7, 'center_y': .5}
         Label:
-            text: 'Highest Hiragana Lesson Completed: 1'
+            text: 'Hiragana'
             font_size: 18
-            pos_hint: {'center_x': .38, 'center_y': .3}
+            pos_hint: {'center_x': .2, 'center_y': .23}
         Label:
-            text: 'Highest Katakana Lesson Completed: 1'
+            text: 'Katakana'
             font_size: 18
-            pos_hint: {'center_x': .38, 'center_y': .2}
+            pos_hint: {'center_x': .2, 'center_y': .16}
         Label:
-            text: 'Highest Kanji Lesson Completed: 1'
+            text: 'Kanji'
             font_size: 18
-            pos_hint: {'center_x': .35, 'center_y': .1}
+            pos_hint: {'center_x': .2, 'center_y': .09}
+        Label:
+            text: 'Highest'
+            font_size: 18
+            pos_hint: {'center_x': .45, 'center_y': .3}
+        Label:
+            text: 'Total'
+            font_size: 18
+            pos_hint: {'center_x': .75, 'center_y': .3}
+        Label:
+            id: highestHiraLessons
+            text: ''
+            font_size: 18
+            pos_hint: {'center_x': .45, 'center_y': .23}
+        Label:
+            id: highestKataLessons
+            text: ''
+            font_size: 18
+            pos_hint: {'center_x': .45, 'center_y': .16}
+        Label:
+            id: highestKanjiLessons
+            text: ''
+            font_size: 18
+            pos_hint: {'center_x': .45, 'center_y': .09}
+        Label:
+            id: totalHiraLessons
+            text: ''
+            font_size: 18
+            pos_hint: {'center_x': .75, 'center_y': .23}
+        Label:
+            id: totalKataLessons
+            text: ''
+            font_size: 18
+            pos_hint: {'center_x': .75, 'center_y': .16}
+        Label:
+            id: totalKanjiLessons
+            text: ''
+            font_size: 18
+            pos_hint: {'center_x': .75, 'center_y': .09}
         Button:
             text: 'New'
             font_size: 20
+            on_release: root.createNewProfile()
             size_hint: None, None
             size: 80, 40
             pos_hint: {'center_x': .7, 'center_y': .7}
         Button:
             text: 'Delete'
             font_size: 20
+            on_release: root.showDeletePopup()
             size_hint: None, None
             size: 80, 40
             pos_hint: {'center_x': .7, 'center_y': .55}
