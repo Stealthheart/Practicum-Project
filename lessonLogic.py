@@ -65,6 +65,12 @@ def areMoreLessons():
         return False
     return True
 
+# Calculates the performance in the current lesson.
+def unlockedNextLesson():
+    if 100 * (float(getCorrectQuestionCount()) / float(getTotalQuestionCount())) >= 80:
+        return True
+    return False
+
 #endregion Lesson Methods
 
 #region Question Methods
@@ -125,15 +131,22 @@ def retrieveResultString():
 
 #endregion Answer Methods
 
+#region Language Methods
 # Returns the selected language string.
 def getSelectedLanguage():
     return langTypes[currLang]
 
-def getSelectedLanguageNum():
+# Returns the language number.
+def getLangNumber():
     return currLang
+#endregion
 
+#region Image Methods
+# Removes the front element from lesson list.
 def deleteImgList():
     questionArray.pop(0)
 
+# Returns the image names in the lesson array
 def getImagePaths():
     return questionArray[0]
+#endregion
