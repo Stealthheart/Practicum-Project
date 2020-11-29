@@ -15,7 +15,7 @@ from kivy.uix.popup import Popup
 from kivy.properties import ListProperty, Clock
 from PIL import Image as pilImg
 from PIL import ImageOps as opsImg
-from numpy import asarray
+
 
 # Sets the config first
 Config.set('graphics', 'width', '500')
