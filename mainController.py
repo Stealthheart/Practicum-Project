@@ -290,3 +290,9 @@ def getProfileNameLength():
     return dataLogic.getNumProfiles()
 
 #endregion
+
+def initializeAI():
+    lLogic.initializeAI()
+
+def getUserAnswer():
+    return lLogic.getUserAnswer()
