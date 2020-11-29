@@ -14,6 +14,7 @@ from kivy.graphics import Color, Line
 from kivy.uix.popup import Popup
 from kivy.properties import ListProperty, Clock
 from PIL import Image as pilImg
+from PIL import ImageOps as opsImg
 
 # Sets the config first
 Config.set('graphics', 'width', '500')
@@ -609,7 +610,7 @@ class ResultsScreen(Screen):
 color = [1, 1, 1, 1]  # color array for paint widget
 xCoord = 0  # holds the current x coordinate, used for moving the mouse
 yCoord = 0  # holds the current y coordinate, used for moving the mouse
-wide = 2  # holds the width of the line to be drawn
+wide = 4  # holds the width of the line to be drawn
 '''
     This widget is the drawing UI found on the question screen. It handles touch input and can clear the screen after
     submission and when a button is pressed.
@@ -623,7 +624,9 @@ class MyPaintWidget(Widget):
         self.export_to_png("image.jpg")
         image = pilImg.open(r"image.jpg")
         imTest = image.crop((25, 200, 475, 575))
-        imTest.save('image.jpg')
+        imTest = imTest.resize((127, 128))
+        invImg = opsImg.invert(imTest)
+        invImg.save('image.jpg')
         image = open('image.jpg')
         cont.sendAnswer(image)
 
