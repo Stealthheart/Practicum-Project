@@ -1,9 +1,17 @@
 import uiFileIOLibrary as io
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # or any {'0', '1', '2'}
+from keras.preprocessing import image
+from keras.models import load_model
+from tensorflow import convert_to_tensor
+import numpy as np
 from random import randrange
+import AIController as aiCont
+import characterLists as charsList
 
+np.set_printoptions(threshold=np.inf)
 '''
-    This class will hold the logic for the lessons and questions. Currently, everything is hardcoded into arrays,
-    except the lesson titles, which are held in some .txt file. The majority of this implementation is coming next.
+    This class will hold the logic for the lessons and questions. 
 '''
 
 langTypes = ["Hiragana", "Katakana", "Kanji"]
@@ -17,6 +25,7 @@ totalQuestionNum = 10
 questionArray = []
 currQuestion = []
 correctAnswer = 0
+lastPredictedAnswer = -1
 
 #region Lesson Methods
 
@@ -67,7 +76,7 @@ def areMoreLessons():
 
 # Calculates the performance in the current lesson.
 def unlockedNextLesson():
-    if 100 * (float(getCorrectQuestionCount()) / float(getTotalQuestionCount())) >= 80:
+    if 100 * (float(getCorrectQuestionCount()) / float(getTotalQuestionCount())) >= 60:
         return True
     return False
 
@@ -117,13 +126,22 @@ def getCorrectAnswer():
     returned to determine the correct answer.
 '''
 def checkAnswer(img):
-    global correctQuestions, correctAnswer
-    num = randrange(2)
-    if num == 0:
+    global correctQuestions, correctAnswer, lastPredictedAnswer
+    lastPredictedAnswer = aiCont.predictAnswer()
+    print(lastPredictedAnswer)
+
+    if lastPredictedAnswer == currQuestion[1]:
         correctAnswer = 0
         correctQuestions += 1
     else:
         correctAnswer = 1
+
+    '''num = randrange(2)
+    if num == 0:
+        correctAnswer = 0
+        correctQuestions += 1
+    else:
+        correctAnswer = 1'''
 
 # Returns 0 or 1, depending if the answer was correct.
 def retrieveResultString():
@@ -150,3 +168,9 @@ def deleteImgList():
 def getImagePaths():
     return questionArray[0]
 #endregion
+
+def initializeAI():
+    aiCont.initializeAIModel(currLang)
+
+def getUserAnswer():
+    return charsList.getChar(currLang, lastPredictedAnswer)

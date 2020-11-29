@@ -14,6 +14,8 @@ from kivy.graphics import Color, Line
 from kivy.uix.popup import Popup
 from kivy.properties import ListProperty, Clock
 from PIL import Image as pilImg
+from PIL import ImageOps as opsImg
+from numpy import asarray
 
 # Sets the config first
 Config.set('graphics', 'width', '500')
@@ -491,10 +493,13 @@ class QuestionScreen(Screen):
     def on_pre_enter(self):
         getNextQuestion(self)
         self.ids.nextQBtn.disabled = True
+        cont.initializeAI()
 
     # Submits the drawing for checking against the AI.
     def submitDrawing(self):
+        print("fucking what")
         self.ids.submitBtn.disabled = True
+        print("fucking what1")
         self.ids.drawingCanvas.submitAnswer()
         self.ids.correctAns.text = self.getAnswerResult()
         self.ids.userAns.text = "You wrote: " + self.getUserAnswer()
@@ -512,7 +517,7 @@ class QuestionScreen(Screen):
 
     # This will retrieve the answer the AI determines
     def getUserAnswer(self):
-        return "あ"
+        return cont.getUserAnswer()
 
     # This will retrieve the correct answer stored in the question
     def getCorrectAnswer(self):
@@ -584,10 +589,10 @@ class ResultsScreen(Screen):
         self.ids.resAccuracy.text = "Accuracy: {:0.2f}%".format(percentage)
 
         # Displays a different message depending on if you passed the lesson or not.
-        if percentage >= 80:
+        if percentage >= 60:
             self.ids.resLessonUnlockLbl.text = "You have unlocked the next lesson!"
         else:
-            self.ids.resLessonUnlockLbl.text = "Try again for 80% to unlock the next lesson."
+            self.ids.resLessonUnlockLbl.text = "Try again for 60% to unlock the next lesson."
             self.ids.resNextLessonBtn.disabled = True
 
     # Loads the next lesson immediately
@@ -609,7 +614,7 @@ class ResultsScreen(Screen):
 color = [1, 1, 1, 1]  # color array for paint widget
 xCoord = 0  # holds the current x coordinate, used for moving the mouse
 yCoord = 0  # holds the current y coordinate, used for moving the mouse
-wide = 2  # holds the width of the line to be drawn
+wide = 4  # holds the width of the line to be drawn
 '''
     This widget is the drawing UI found on the question screen. It handles touch input and can clear the screen after
     submission and when a button is pressed.
@@ -620,11 +625,15 @@ class MyPaintWidget(Widget):
 
     # Stores the drawn answer into a jpg, then passes it to the logic to check against the AI.
     def submitAnswer(self):
-        self.export_to_png("image.jpg")
-        image = pilImg.open(r"image.jpg")
+        self.export_to_png("image.png")
+        image = pilImg.open("image.png")
         imTest = image.crop((25, 200, 475, 575))
-        imTest.save('image.jpg')
-        image = open('image.jpg')
+        imTest = imTest.resize((48, 48))
+        imTest.save('image.png')
+        invImg = opsImg.invert(imTest.convert('RGB'))
+        invImg = opsImg.invert(invImg)
+        invImg.save('image.png')
+
         cont.sendAnswer(image)
 
     # Captures the x and y coordinates when the user clicks or presses down on the drawing canvas
