@@ -15,7 +15,7 @@ from kivy.uix.popup import Popup
 from kivy.properties import ListProperty, Clock
 from PIL import Image as pilImg
 from PIL import ImageOps as opsImg
-
+from numpy import asarray
 
 # Sets the config first
 Config.set('graphics', 'width', '500')
@@ -497,9 +497,7 @@ class QuestionScreen(Screen):
 
     # Submits the drawing for checking against the AI.
     def submitDrawing(self):
-        print("fucking what")
         self.ids.submitBtn.disabled = True
-        print("fucking what1")
         self.ids.drawingCanvas.submitAnswer()
         self.ids.correctAns.text = self.getAnswerResult()
         self.ids.userAns.text = "You wrote: " + self.getUserAnswer()
