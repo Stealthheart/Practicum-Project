@@ -1,15 +1,8 @@
 import uiFileIOLibrary as io
-import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # or any {'0', '1', '2'}
-from keras.preprocessing import image
-from keras.models import load_model
-from tensorflow import convert_to_tensor
-import numpy as np
 from random import randrange
 import AIController as aiCont
 import characterLists as charsList
 
-np.set_printoptions(threshold=np.inf)
 '''
     This class will hold the logic for the lessons and questions. 
 '''
@@ -125,23 +118,15 @@ def getCorrectAnswer():
     correct and 1 incorrect. Eventually, this method will pass the given image to the AI, and will check what is
     returned to determine the correct answer.
 '''
-def checkAnswer(img):
+def checkAnswer():
     global correctQuestions, correctAnswer, lastPredictedAnswer
     lastPredictedAnswer = aiCont.predictAnswer()
-    print(lastPredictedAnswer)
 
     if lastPredictedAnswer == currQuestion[1]:
         correctAnswer = 0
         correctQuestions += 1
     else:
         correctAnswer = 1
-
-    '''num = randrange(2)
-    if num == 0:
-        correctAnswer = 0
-        correctQuestions += 1
-    else:
-        correctAnswer = 1'''
 
 # Returns 0 or 1, depending if the answer was correct.
 def retrieveResultString():
